@@ -204,7 +204,7 @@ export const posts: BlogPost[] = [
     featuredSize: "medium",
   },
   {
-    id: 16, // Next available ID
+    id: 17, // Next available ID
   slug: "nvidia-chip-breakthrough",
   title: "NVIDIA Unveils a Revolutionary New Chip Pushing AI and Graphics Boundaries",
   category: "Technology",
