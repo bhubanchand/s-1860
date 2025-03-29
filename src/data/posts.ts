@@ -228,7 +228,7 @@ NVIDIA's new chip isn't just about current performance—it's built for the futu
 
 As the world becomes more data-driven and dependent on high-performance computing, NVIDIA's new chip will play a pivotal role in shaping the future of technology.`,
   image: "https://res.cloudinary.com/dyzamqtdw/image/upload/v1743275596/nvidia_1651928213_hjnhve.webp",
-  createdAt: "2025-03-28",
+  createdAt: "2025-03-30",
   readTime: "5 min read",
   featured: true,
   featuredSize: "large"
