@@ -52,7 +52,7 @@ export const posts: BlogPost[] = [
     createdAt: "2024-06-30",
     readTime: "6 min read",
     featured: true,
-    featuredSize: "small",
+    featuredSize: "medium",
   },
   {
     id: 5,
