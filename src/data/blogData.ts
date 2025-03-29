@@ -56,13 +56,29 @@ export const getFeaturedPosts = (): BlogPost[] => {
   return result.slice(0, 6);
 };
 
-// Utility functions
-export const getRecentPosts = (count: number = 6): BlogPost[] => {
-  return sortBlogPosts(blogPosts).slice(0, count);
+// New function to prevent blog post repetition
+export const getPostsWithoutRepetition = (
+  category: string,
+  count: number = 4,
+  excludeIds: number[] = []
+): BlogPost[] => {
+  const filteredPosts = blogPosts.filter(
+    (post) => post.category === category && !excludeIds.includes(post.id)
+  );
+  return sortBlogPosts(filteredPosts).slice(0, count);
 };
 
-export const getPostsByCategory = (category: string, count?: number): BlogPost[] => {
-  const filteredPosts = blogPosts.filter((post) => post.category === category);
+// Utility functions
+export const getRecentPosts = (count: number = 6, excludeIds: number[] = []): BlogPost[] => {
+  return sortBlogPosts(
+    blogPosts.filter(post => !excludeIds.includes(post.id))
+  ).slice(0, count);
+};
+
+export const getPostsByCategory = (category: string, count?: number, excludeIds: number[] = []): BlogPost[] => {
+  const filteredPosts = blogPosts.filter(
+    (post) => post.category === category && !excludeIds.includes(post.id)
+  );
   return count ? sortBlogPosts(filteredPosts).slice(0, count) : sortBlogPosts(filteredPosts);
 };
 
