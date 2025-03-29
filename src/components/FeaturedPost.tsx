@@ -20,9 +20,9 @@ const FeaturedPost: React.FC<FeaturedPostProps> = ({
   size = "medium",
 }) => {
   const sizeClasses = {
-    large: "col-span-6 md:col-span-6 lg:col-span-4 md:row-span-2 h-[400px]",
-    medium: "col-span-6 md:col-span-3 lg:col-span-2 h-[250px]",
-    small: "col-span-6 md:col-span-3 lg:col-span-2 h-[250px]",
+    large: "col-span-6 md:col-span-6 lg:col-span-4 md:row-span-2 h-[400px] md:h-[500px]",
+    medium: "col-span-6 md:col-span-3 lg:col-span-2 h-[250px] md:h-[300px]",
+    small: "col-span-6 md:col-span-3 lg:col-span-2 h-[250px] md:h-[300px]",
   };
 
   const titleSizes = {

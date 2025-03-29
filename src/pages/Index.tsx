@@ -6,12 +6,11 @@ import FeaturedPost from "@/components/FeaturedPost";
 import BlogCard from "@/components/BlogCard";
 import ScrollToTop from "@/components/ScrollToTop";
 import { getFeaturedPosts, getPostsByCategory, getRecentPosts } from "@/data/blogData";
-import { Volume } from "lucide-react";
 
 const Index = () => {
   const featuredPosts = getFeaturedPosts();
-  const entertainmentPosts = getPostsByCategory("Entertainment", 3);
-  const technologyPosts = getPostsByCategory("Technology", 3);
+  const entertainmentPosts = getPostsByCategory("Entertainment", 4);
+  const technologyPosts = getPostsByCategory("Technology", 4);
   const moviePosts = getPostsByCategory("Movies", 4);
   const recentPosts = getRecentPosts(6);
 
@@ -52,9 +51,9 @@ const Index = () => {
 
   return (
     <BlogLayout>
-      <div className="pt-20">
+      <div className="pt-16">
         {/* Hero Section */}
-        <section className="container mx-auto px-4 mt-8">
+        <section className="container mx-auto px-4 mt-4">
           <div className="grid grid-cols-6 gap-4 appear-animation">
             {featuredPosts.map((post) => (
               <FeaturedPost
@@ -73,10 +72,10 @@ const Index = () => {
         {/* Entertainment Section */}
         <section 
           ref={addToRefs} 
-          className="container mx-auto px-4 mt-20 opacity-0"
+          className="container mx-auto px-4 mt-16 opacity-0"
         >
           <h2 className="section-title">Entertainment</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 appear-animation">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 appear-animation">
             {entertainmentPosts.map((post) => (
               <BlogCard
                 key={post.id}
@@ -95,10 +94,10 @@ const Index = () => {
         {/* Trending Section */}
         <section 
           ref={addToRefs} 
-          className="container mx-auto px-4 mt-20 opacity-0"
+          className="container mx-auto px-4 mt-16 opacity-0"
         >
           <div className="bg-secondary rounded-lg p-6">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-4">
               <h2 className="section-title mb-0">Trending Now</h2>
               <Link to="/trending" className="text-blog-green hover:text-blog-accent transition-colors text-sm font-medium">
                 View All
@@ -125,15 +124,15 @@ const Index = () => {
         {/* Movies Section */}
         <section 
           ref={addToRefs} 
-          className="container mx-auto px-4 mt-20 opacity-0"
+          className="container mx-auto px-4 mt-16 opacity-0"
         >
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-4">
             <h2 className="section-title mb-0">Latest Movies</h2>
             <Link to="/movies" className="text-blog-green hover:text-blog-accent transition-colors text-sm font-medium">
               View All
             </Link>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 appear-animation">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 appear-animation">
             {moviePosts.map((post) => (
               <BlogCard
                 key={post.id}
@@ -152,10 +151,10 @@ const Index = () => {
         {/* Technology Section */}
         <section 
           ref={addToRefs} 
-          className="container mx-auto px-4 mt-20 opacity-0"
+          className="container mx-auto px-4 mt-16 opacity-0"
         >
           <h2 className="section-title">Technology</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 appear-animation">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 appear-animation">
             {technologyPosts.map((post) => (
               <BlogCard
                 key={post.id}
@@ -174,9 +173,9 @@ const Index = () => {
         {/* More Articles Section */}
         <section 
           ref={addToRefs} 
-          className="container mx-auto px-4 mt-20 mb-20 opacity-0"
+          className="container mx-auto px-4 mt-16 mb-16 opacity-0"
         >
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-4">
             <h2 className="section-title mb-0">More Articles</h2>
             <Link to="/trending" className="text-blog-green hover:text-blog-accent transition-colors text-sm font-medium">
               View All
