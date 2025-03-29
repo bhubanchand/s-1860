@@ -203,4 +203,19 @@ export const posts: BlogPost[] = [
     featured: false,
     featuredSize: "medium",
   },
+  const newPost = createNewBlogPost({
+  id: 17, // Next available ID
+  slug: "nvidia-chip-innovation",
+  title: "NVIDIA's Groundbreaking Chip Innovations",
+  category: "Technology",
+  excerpt: "NVIDIA's latest chips are redefining the boundaries of AI and graphics processing, pushing technological capabilities further than ever before.",
+  content: "NVIDIA continues to lead the way in chip innovation with its new lineup of processors. The latest releases, powered by their cutting-edge architecture, are setting benchmarks in AI acceleration and graphics rendering. These chips are designed not just for gaming but also for AI, machine learning, and cloud computing applications. NVIDIA's latest technology showcases enhanced performance per watt, with features like real-time ray tracing and deep learning super sampling (DLSS), improving visual fidelity and computational efficiency. This innovation is also pivotal for autonomous vehicles, healthcare AI, and advanced scientific simulations. One of the most talked-about features is the integration of AI-focused hardware that accelerates workloads for neural networks, making these chips indispensable in fields requiring massive computational power. The future of AI and gaming is now closely tied to the strides NVIDIA is making with its chips.",
+  image: "https://res.cloudinary.com/dyzamqtdw/image/upload/v1743275596/nvidia_1651928213_hjnhve.webp",
+  readTime: "5 min read",
+  featured: true,
+  featuredSize: "large",
+});
+
+// The newPost object will automatically have today's date
+
 ];
