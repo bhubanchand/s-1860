@@ -203,7 +203,7 @@ export const posts: BlogPost[] = [
     featured: false,
     featuredSize: "medium",
   },
-  const newPost = createNewBlogPost({
+{
   id: 17, // Next available ID
   slug: "nvidia-chip-innovation",
   title: "NVIDIA's Groundbreaking Chip Innovations",
@@ -214,8 +214,6 @@ export const posts: BlogPost[] = [
   readTime: "5 min read",
   featured: true,
   featuredSize: "large",
-});
-
-// The newPost object will automatically have today's date
+}
 
 ];
