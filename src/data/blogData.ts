@@ -49,25 +49,26 @@ export const sortBlogPosts = (posts: BlogPost[]): BlogPost[] => {
 
 // Get featured posts ensuring we have the right sizes and newest posts get priority
 export const getFeaturedPosts = (): BlogPost[] => {
-  // Get all featured posts sorted by date (newest first)
-  const allFeaturedPosts = sortBlogPosts(blogPosts.filter((post) => post.featured));
+  // Get all posts sorted by date (newest first)
+  const sortedPosts = sortBlogPosts(blogPosts);
   
-  // Always assign the most recent featured post as the large post
-  // (regardless of whether it had a featuredSize property before)
-  const mainFeaturedPost = allFeaturedPosts.length > 0 
-    ? { ...allFeaturedPosts[0], featuredSize: "large" as const }
+  // Take the 6 newest posts for featuring, regardless of whether they were previously marked as featured
+  const newFeaturedPosts = sortedPosts.slice(0, 6);
+  
+  // Always assign the newest post as the large post
+  const mainFeaturedPost = newFeaturedPosts.length > 0 
+    ? { ...newFeaturedPosts[0], featuredSize: "large" as const, featured: true }
     : null;
   
-  // Get the next 5 most recent featured posts and assign them as medium
-  const mediumFeaturedPosts = allFeaturedPosts
+  // The next 5 newest posts are medium
+  const mediumFeaturedPosts = newFeaturedPosts
     .slice(1, 6) // Skip the first post (used as large) and take up to 5 more
-    .map(post => ({ ...post, featuredSize: "medium" as const }));
+    .map(post => ({ ...post, featuredSize: "medium" as const, featured: true }));
   
   // Combine large post with medium posts
   const result = mainFeaturedPost ? [mainFeaturedPost, ...mediumFeaturedPosts] : [...mediumFeaturedPosts];
   
-  // Limit to 6 total featured posts (1 large + 5 medium)
-  return result.slice(0, 6);
+  return result;
 };
 
 // New function to prevent blog post repetition
