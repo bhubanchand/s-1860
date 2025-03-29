@@ -1,21 +1,4 @@
 
-import post1 from "@/blogs/1";
-import post2 from "@/blogs/2";
-import post3 from "@/blogs/3";
-import post4 from "@/blogs/4";
-import post5 from "@/blogs/5";
-import post6 from "@/blogs/6";
-import post7 from "@/blogs/7";
-import post8 from "@/blogs/8";
-import post9 from "@/blogs/9";
-import post10 from "@/blogs/10";
-import post11 from "@/blogs/11";
-import post12 from "@/blogs/12";
-import post13 from "@/blogs/13";
-import post14 from "@/blogs/14";
-import post15 from "@/blogs/15";
-import post16 from "@/blogs/16";
-
 // Blog data interface
 export interface BlogPost {
   id: number;
@@ -31,25 +14,11 @@ export interface BlogPost {
   featuredSize?: "large" | "medium" | "small";
 }
 
-// Import all blog posts - organizing them in dedicated files
-export const blogPosts: BlogPost[] = [
-post1,  
-post2,  
-post3,  
-post4,  
-post5,  
-post6,  
-post7,  
-post8,  
-post9,  
-post10,  
-post11,  
-post12,  
-post13,  
-post14,  
-post15,  
-post16,  
-];
+// Import all blog posts from the centralized posts file
+import { posts } from "./posts";
+
+// Export the posts as blogPosts for backwards compatibility
+export const blogPosts: BlogPost[] = posts;
 
 // Sorting by createdAt in descending order (newest first)
 export const sortBlogPosts = (posts: BlogPost[]): BlogPost[] => {
