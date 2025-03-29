@@ -20,6 +20,20 @@ import { posts } from "./posts";
 // Export the posts as blogPosts for backwards compatibility
 export const blogPosts: BlogPost[] = posts;
 
+/**
+ * Generates the current date in YYYY-MM-DD format
+ * This can be used when creating new blog posts to automatically set the current date
+ */
+export const getCurrentDate = (): string => {
+  const now = new Date();
+  const year = now.getFullYear();
+  // Adding 1 to getMonth because it returns 0-11
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  
+  return `${year}-${month}-${day}`;
+};
+
 // Sorting by createdAt in descending order (newest first)
 export const sortBlogPosts = (posts: BlogPost[]): BlogPost[] => {
   const now = new Date().getTime(); 
@@ -93,4 +107,16 @@ export const getRelatedPosts = (currentPostId: number, count: number = 3): BlogP
 
 export const getPostBySlug = (slug: string): BlogPost | undefined => {
   return blogPosts.find((post) => post.slug === slug);
+};
+
+/**
+ * Creates a new blog post with the current date
+ * @param post The blog post data without createdAt
+ * @returns A complete blog post with the current date
+ */
+export const createNewBlogPost = (post: Omit<BlogPost, 'createdAt'>): BlogPost => {
+  return {
+    ...post,
+    createdAt: getCurrentDate(),
+  };
 };
