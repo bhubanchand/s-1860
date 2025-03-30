@@ -9,7 +9,13 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <h3 className="text-xl font-bold text-white mb-4">
-              Blog<span className="text-blog-green">Pulse</span>
+              <Link
+            to="/"
+            className="flex items-center space-x-2 text-2xl font-bold text-white"
+          >
+            <img src="/favicon.ico" alt="Tonight Logo" className="w-8 h-8" />
+            <span className="font-mono font-bold">tonight</span>
+          </Link>
             </h3>
             <p className="text-muted-foreground">
               Your source for the latest entertainment and tech news.
@@ -86,9 +92,9 @@ const Footer: React.FC = () => {
           </div>
         </div>
 
-        <div className="border-t border-muted mt-8 pt-8 text-center text-muted-foreground">
-          <p>© {new Date().getFullYear()} BlogPulse. All rights reserved.</p>
-        </div>
+        <div className="border-t border-muted mt-8 pt-8 text-center text-muted-foreground font-mono font-bold">
+  <p>© {new Date().getFullYear()} <span className="font-bold">tonight</span>. All rights reserved.</p>
+</div>
       </div>
     </footer>
   );

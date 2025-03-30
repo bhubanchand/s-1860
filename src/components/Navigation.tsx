@@ -39,8 +39,12 @@ const Navigation: React.FC = () => {
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
-          <Link to="/" className="text-2xl font-bold text-white">
-            Blog<span className="text-blog-green">Pulse</span>
+          <Link
+            to="/"
+            className="flex items-center space-x-2 text-2xl font-bold text-white"
+          >
+            <img src="/favicon.ico" alt="Tonight Logo" className="w-8 h-8" />
+            <span className="font-mono font-bold">tonight</span>
           </Link>
 
           {/* Desktop Navigation */}

@@ -20,20 +20,6 @@ import { posts } from "./posts";
 // Export the posts as blogPosts for backwards compatibility
 export const blogPosts: BlogPost[] = posts;
 
-/**
- * Generates the current date in YYYY-MM-DD format
- * This can be used when creating new blog posts to automatically set the current date
- */
-export const getCurrentDate = (): string => {
-  const now = new Date();
-  const year = now.getFullYear();
-  // Adding 1 to getMonth because it returns 0-11
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  
-  return `${year}-${month}-${day}`;
-};
-
 // Sorting by createdAt in descending order (newest first)
 export const sortBlogPosts = (posts: BlogPost[]): BlogPost[] => {
   const now = new Date().getTime(); 
@@ -49,28 +35,38 @@ export const sortBlogPosts = (posts: BlogPost[]): BlogPost[] => {
 
 // Get featured posts ensuring we have the right sizes and newest posts get priority
 export const getFeaturedPosts = (): BlogPost[] => {
-  // Get all posts sorted by date (newest first)
-  const sortedPosts = sortBlogPosts(blogPosts);
-  
-  // Take the 6 newest posts for featuring, regardless of whether they were previously marked as featured
-  const newFeaturedPosts = sortedPosts.slice(0, 6);
-  
-  // Always assign the newest post as the large post
-  const mainFeaturedPost = newFeaturedPosts.length > 0 
-    ? { ...newFeaturedPosts[0], featuredSize: "large" as const, featured: true }
+  // Get all featured posts sorted by date (newest first)
+  const allFeaturedPosts = sortBlogPosts(blogPosts.filter((post) => post.featured));
+
+  if (allFeaturedPosts.length === 0) return [];
+
+  // Determine the most recent valid date from the featured posts
+  const mostRecentDate = Math.max(...allFeaturedPosts.map(post => new Date(post.createdAt).getTime()));
+
+  // Find all posts with this most recent date
+  const latestFeaturedPosts = allFeaturedPosts.filter(
+    post => new Date(post.createdAt).getTime() === mostRecentDate
+  );
+
+  // Assign the most recent featured post as the large post
+  const mainFeaturedPost = latestFeaturedPosts.length > 0 
+    ? { ...latestFeaturedPosts[0], featuredSize: "large" as const }
     : null;
-  
-  // The next 5 newest posts are medium
-  const mediumFeaturedPosts = newFeaturedPosts
-    .slice(1, 6) // Skip the first post (used as large) and take up to 5 more
-    .map(post => ({ ...post, featuredSize: "medium" as const, featured: true }));
-  
+
+  // Remove the selected large post from the list and sort remaining for medium posts
+  const remainingFeaturedPosts = allFeaturedPosts.filter(post => post.id !== mainFeaturedPost?.id);
+
+  // Get the next 5 most recent featured posts and assign them as medium
+  const mediumFeaturedPosts = remainingFeaturedPosts
+    .slice(0, 3) // Take up to 5 more posts
+    .map(post => ({ ...post, featuredSize: "medium" as const }));
+
   // Combine large post with medium posts
   const result = mainFeaturedPost ? [mainFeaturedPost, ...mediumFeaturedPosts] : [...mediumFeaturedPosts];
-  
-  return result;
-};
 
+  // Limit to 6 total featured posts (1 large + 5 medium)
+  return result.slice(0, 6);
+};
 // New function to prevent blog post repetition
 export const getPostsWithoutRepetition = (
   category: string,
@@ -83,13 +79,13 @@ export const getPostsWithoutRepetition = (
   return sortBlogPosts(filteredPosts).slice(0, count);
 };
 
+
 // Utility functions
 export const getRecentPosts = (count: number = 6, excludeIds: number[] = []): BlogPost[] => {
   return sortBlogPosts(
     blogPosts.filter(post => !excludeIds.includes(post.id))
   ).slice(0, count);
 };
-
 export const getPostsByCategory = (category: string, count?: number, excludeIds: number[] = []): BlogPost[] => {
   const filteredPosts = blogPosts.filter(
     (post) => post.category === category && !excludeIds.includes(post.id)
@@ -108,16 +104,4 @@ export const getRelatedPosts = (currentPostId: number, count: number = 3): BlogP
 
 export const getPostBySlug = (slug: string): BlogPost | undefined => {
   return blogPosts.find((post) => post.slug === slug);
-};
-
-/**
- * Creates a new blog post with the current date
- * @param post The blog post data without createdAt
- * @returns A complete blog post with the current date
- */
-export const createNewBlogPost = (post: Omit<BlogPost, 'createdAt'>): BlogPost => {
-  return {
-    ...post,
-    createdAt: getCurrentDate(),
-  };
 };

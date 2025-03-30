@@ -9,7 +9,6 @@ interface FeaturedPostProps {
   excerpt: string;
   slug: string;
   size?: "large" | "medium" | "small";
-  date?: string;
 }
 
 const FeaturedPost: React.FC<FeaturedPostProps> = ({
@@ -19,10 +18,9 @@ const FeaturedPost: React.FC<FeaturedPostProps> = ({
   excerpt,
   slug,
   size = "medium",
-  date,
 }) => {
   const sizeClasses = {
-    large: "col-span-6 md:col-span-6 lg:col-span-4 md:row-span-2 h-[400px] md:h-[500px]",
+    large: "col-span-6 md:col-span-6 lg:col-span-6 md:row-span-2 h-[400px] md:h-[500px]",
     medium: "col-span-6 md:col-span-3 lg:col-span-2 h-[250px] md:h-[300px]",
     small: "col-span-6 md:col-span-3 lg:col-span-2 h-[250px] md:h-[300px]",
   };
@@ -42,18 +40,11 @@ const FeaturedPost: React.FC<FeaturedPostProps> = ({
         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-105"
       />
       <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 z-20">
-        <div className="flex justify-between items-center mb-2">
-          <span className="inline-block px-2 py-1 text-xs font-semibold rounded bg-blog-green text-white">
-            {category}
-          </span>
-          {date && (
-            <span className="text-white/80 text-xs">
-              {date}
-            </span>
-          )}
-        </div>
+        <span className="inline-block px-2 py-1 mb-2 text-xs font-semibold rounded bg-blog-green text-white">
+          {category}
+        </span>
         <Link to={`/post/${slug}`}>
-          <h2 className={`${titleSizes[size]} font-bold text-white text-shadow-lg mb-2 leading-tight hover:text-blog-accent transition-colors`}>
+          <h2 className={`${titleSizes[size]} font-bold text-white text-shadow-lg mb-2 leading-tight hover:text-blog-green transition-colors`}>
             {title}
           </h2>
         </Link>
