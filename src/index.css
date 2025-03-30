@@ -115,6 +115,11 @@
   .button-secondary {
     @apply bg-gray-900 hover:bg-gray-800 text-white border border-gray-700;
   }
+  
+  /* Loading screen animation */
+  .loading-pulse {
+    @apply animate-pulse;
+  }
 }
 
 @layer utilities {
@@ -149,5 +154,14 @@
   
   .high-contrast-text {
     @apply text-white font-medium tracking-wide;
+  }
+
+  /* Loading screen utilities */
+  .loading-container {
+    @apply fixed inset-0 z-50 flex items-center justify-center bg-black;
+  }
+  
+  .loading-spinner {
+    @apply flex flex-col items-center justify-center space-y-4 p-8;
   }
 }
