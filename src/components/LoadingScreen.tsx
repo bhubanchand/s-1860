@@ -37,8 +37,8 @@ const LoadingScreen = ({
         )}
       </div>
       
-      <div className="absolute bottom-10 left-0 right-0 text-center">
-        <p className="text-sm text-muted-foreground">Tonight Blog</p>
+      <div className="absolute bottom-10 left-0 right-0 flex justify-center">
+        <img src="/favicon.ico" alt="Tonight Blog Logo" className="h-8 w-8" />
       </div>
     </div>
   );
