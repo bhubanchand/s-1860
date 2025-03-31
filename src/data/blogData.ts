@@ -1,35 +1,15 @@
+
 import { BlogPost, useBlogStore } from "./posts";
 
-// Scheduler function to ensure posts are only displayed after their scheduled time
+// Use the scheduled posts from the store
 export const getScheduledPosts = (): BlogPost[] => {
-  const now = new Date();
-  const blogPosts = useBlogStore.getState().blogPosts;
-
-  return blogPosts.filter(post => {
-    if (!post.time) return true; // Include immediately if no time is specified
-
-    // Ensure time is a valid string before processing
-    if (typeof post.time !== "string" || !/^\d{1,2}\.\d{1,2}$/.test(post.time)) return false;
-
-    // Convert "2.09" → [2, 9] to handle single-digit hours/minutes correctly
-    const [hours, minutes] = post.time.split('.').map(num => parseInt(num, 10));
-
-    // Validate time ranges
-    if (isNaN(hours) || isNaN(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
-      return false; // Ignore invalid time values
-    }
-
-    // Create a Date object for today's date with the specified time
-    const postDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
-
-    return postDate.getTime() <= now.getTime(); // Show only if the scheduled time has passed
-  });
+  return useBlogStore.getState().getScheduledPosts();
 };
 
 // Sorting by createdAt in descending order (newest first)
 export const sortBlogPosts = (posts: BlogPost[]): BlogPost[] => {
   const now = new Date();
-  now.setHours(0, 0, 0, 0); // Reset time to 00:00:00 for today’s date
+  now.setHours(0, 0, 0, 0); // Reset time to 00:00:00 for today's date
 
   return [...posts]
     .filter(post => {

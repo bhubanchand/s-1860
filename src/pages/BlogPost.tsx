@@ -1,15 +1,17 @@
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import BlogLayout from "@/components/BlogLayout";
 import BlogCard from "@/components/BlogCard";
 import ScrollToTop from "@/components/ScrollToTop";
 import ReadTimeTracker from "@/components/ReadTimeTracker";
+import LoadingScreen from "@/components/LoadingScreen";
 import { getPostBySlug, getRelatedPosts } from "@/data/blogData";
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
   
   const post = slug ? getPostBySlug(slug) : undefined;
   const relatedPosts = post ? getRelatedPosts(post.id, 3) : [];
@@ -17,15 +19,96 @@ const BlogPost = () => {
   useEffect(() => {
     if (!post) {
       navigate("/not-found");
+      return;
     }
     
     // Scroll to top when post loads
     window.scrollTo(0, 0);
+    
+    // Simulate loading for better UX
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 800);
+    
+    return () => clearTimeout(timer);
   }, [post, navigate]);
 
   if (!post) {
     return null;
   }
+
+  if (loading) {
+    return <LoadingScreen message="Loading article..." />;
+  }
+
+  // Function to render markdown-like content as HTML
+  const renderFormattedContent = (content: string) => {
+    return content.split('\n\n').map((paragraph, index) => {
+      // Handle headings
+      if (paragraph.startsWith('## ')) {
+        return <h2 key={index} className="text-xl font-bold mt-8 mb-4">{paragraph.replace('## ', '')}</h2>;
+      } else if (paragraph.startsWith('# ')) {
+        return <h1 key={index} className="text-2xl font-bold mt-8 mb-4">{paragraph.replace('# ', '')}</h1>;
+      }
+      // Handle blockquotes
+      else if (paragraph.startsWith('> ')) {
+        return (
+          <blockquote key={index} className="border-l-4 border-blog-green pl-4 italic my-8 text-gray-300">
+            {paragraph.replace('> ', '')}
+          </blockquote>
+        );
+      }
+      // Handle lists
+      else if (paragraph.includes('\n- ')) {
+        const listItems = paragraph.split('\n- ');
+        return (
+          <ul key={index} className="list-disc pl-6 my-6 space-y-2">
+            {listItems[0] && <p className="mb-2">{listItems[0]}</p>}
+            {listItems.slice(1).map((item, i) => (
+              <li key={i} className="text-gray-200">{item}</li>
+            ))}
+          </ul>
+        );
+      }
+      // Handle numbered lists
+      else if (paragraph.includes('\n1. ')) {
+        const listItems = paragraph.split('\n');
+        const intro = listItems[0] !== '' && !listItems[0].match(/^\d+\. /) ? listItems[0] : null;
+        const items = listItems.filter(item => item.match(/^\d+\. /)).map(item => item.replace(/^\d+\. /, ''));
+        
+        return (
+          <div key={index} className="my-6">
+            {intro && <p className="mb-2">{intro}</p>}
+            <ol className="list-decimal pl-6 space-y-2">
+              {items.map((item, i) => (
+                <li key={i} className="text-gray-200">{item}</li>
+              ))}
+            </ol>
+          </div>
+        );
+      }
+      // Parse inline formatting within paragraphs
+      else {
+        // Process bold text, italic text, and links within paragraphs
+        let formattedText = paragraph;
+        
+        // Replace bold text: **bold**
+        formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        
+        // Replace italic text: *italic*
+        formattedText = formattedText.replace(/\*(.*?)\*/g, '<em>$1</em>');
+        
+        // Replace links: [text](url)
+        formattedText = formattedText.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" class="text-blog-green hover:underline" target="_blank" rel="noopener noreferrer">$1</a>');
+        
+        return (
+          <p key={index} 
+             className="leading-relaxed mb-6" 
+             dangerouslySetInnerHTML={{ __html: formattedText }} />
+        );
+      }
+    });
+  };
 
   return (
     <BlogLayout>
@@ -60,42 +143,10 @@ const BlogPost = () => {
               <p className="text-lg leading-relaxed mb-6">
                 {post.excerpt}
               </p>
-              {/* Display the actual post content instead of lorem ipsum text */}
+              
+              {/* Display the formatted post content */}
               <div className="leading-relaxed">
-                {post.content.split('\n\n').map((paragraph, index) => {
-                  // Check if it's a heading (starts with # or ##)
-                  if (paragraph.startsWith('##')) {
-                    return <h2 key={index} className="text-xl font-bold mt-8 mb-4">{paragraph.replace('##', '').trim()}</h2>;
-                  } else if (paragraph.startsWith('#')) {
-                    return <h1 key={index} className="text-2xl font-bold mt-8 mb-4">{paragraph.replace('#', '').trim()}</h1>;
-                  } 
-                  // Check if it's a blockquote
-                  else if (paragraph.startsWith('>')) {
-                    return (
-                      <blockquote key={index} className="border-l-4 border-blog-green pl-4 italic my-8">
-                        {paragraph.replace('>', '').trim()}
-                      </blockquote>
-                    );
-                  }
-                  // Check if it's bold text
-                  else if (paragraph.includes('**')) {
-                    const parts = paragraph.split(/(\*\*.*?\*\*)/g);
-                    return (
-                      <p key={index} className="leading-relaxed mb-6">
-                        {parts.map((part, i) => {
-                          if (part.startsWith('**') && part.endsWith('**')) {
-                            return <strong key={i}>{part.slice(2, -2)}</strong>;
-                          }
-                          return part;
-                        })}
-                      </p>
-                    );
-                  }
-                  // Regular paragraph
-                  else {
-                    return <p key={index} className="leading-relaxed mb-6">{paragraph}</p>;
-                  }
-                })}
+                {renderFormattedContent(post.content)}
               </div>
             </div>
 
