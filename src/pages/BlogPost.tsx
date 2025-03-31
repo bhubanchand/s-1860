@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import BlogLayout from "@/components/BlogLayout";
 import BlogCard from "@/components/BlogCard";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -18,7 +18,10 @@ const BlogPost = () => {
 
   useEffect(() => {
     if (!post) {
-      navigate("/not-found");
+      // Only navigate to not-found if we've finished the initial load
+      if (!loading) {
+        navigate("/not-found");
+      }
       return;
     }
     
@@ -31,14 +34,16 @@ const BlogPost = () => {
     }, 800);
     
     return () => clearTimeout(timer);
-  }, [post, navigate]);
+  }, [post, navigate, loading]);
 
-  if (!post) {
-    return null;
-  }
-
+  // Return early if post is undefined and we're still loading
   if (loading) {
     return <LoadingScreen message="Loading article..." />;
+  }
+
+  // Return null if post is undefined but we're not loading
+  if (!post) {
+    return null;
   }
 
   return (

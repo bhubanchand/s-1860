@@ -9,6 +9,7 @@ const BlogProvider = () => {
   const loading = useBlogStore((state) => state.loading);
   const error = useBlogStore((state) => state.error);
   const [progress, setProgress] = useState(0);
+  const [initialFetchDone, setInitialFetchDone] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -26,6 +27,7 @@ const BlogProvider = () => {
       try {
         // Fetch posts
         await fetchPosts();
+        setInitialFetchDone(true);
       } catch (err) {
         console.error("Error in BlogProvider:", err);
       } finally {
@@ -43,7 +45,7 @@ const BlogProvider = () => {
     }
   }, [fetchPosts, startAutoFetch]);
 
-  if (loading && progress < 100) {
+  if ((loading || !initialFetchDone) && progress < 100) {
     return <LoadingScreen message="Loading blog content..." progress={progress} />;
   }
 
