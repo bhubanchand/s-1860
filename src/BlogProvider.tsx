@@ -28,6 +28,9 @@ const BlogProvider = () => {
         // Fetch posts
         await fetchPosts();
         setInitialFetchDone(true);
+        
+        // Add a console log to verify data loading in production
+        console.log("Blog posts loaded successfully in BlogProvider");
       } catch (err) {
         console.error("Error in BlogProvider:", err);
       } finally {

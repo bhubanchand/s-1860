@@ -17,9 +17,14 @@ const BlogPost = () => {
   const relatedPosts = post ? getRelatedPosts(post.id, 3) : [];
 
   useEffect(() => {
+    // Log for debugging in production
+    console.log("BlogPost component mounted, slug:", slug);
+    console.log("Post found:", post ? "Yes" : "No");
+    
     if (!post) {
       // Only navigate to not-found if we've finished the initial load
       if (!loading) {
+        console.log("Post not found, navigating to 404 page");
         navigate("/not-found");
       }
       return;
@@ -34,7 +39,7 @@ const BlogPost = () => {
     }, 800);
     
     return () => clearTimeout(timer);
-  }, [post, navigate, loading]);
+  }, [post, navigate, loading, slug]);
 
   // Return early if post is undefined and we're still loading
   if (loading) {
