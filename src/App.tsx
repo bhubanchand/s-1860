@@ -1,4 +1,3 @@
-
 import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -7,7 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTopOnNavigation from "./components/ScrollToTopOnNavigation";
 import GTMTracker from "./GTMTracker";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import LoadingScreen from "./components/LoadingScreen";
+import BlogProvider from "./BlogProvider";
 
 // Lazy load pages
 const Index = lazy(() => import("./pages/Index"));
@@ -22,10 +21,14 @@ const SearchResults = lazy(() => import("./pages/SearchResults"));
 const TrendingBlogs = lazy(() => import("./pages/TrendingBlogs"));
 const MovieBlogs = lazy(() => import("./pages/MovieBlogs"));
 
+// Custom loading fallback
+const Loader = () => <div className="loading-spinner">Loading...</div>;
+
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
+    <BlogProvider />
     <Toaster />
     <Sonner />
     <BrowserRouter>
@@ -36,7 +39,7 @@ const App = () => (
           <Route
             path="/"
             element={
-              <Suspense fallback={<LoadingScreen />}>
+              <Suspense fallback={<Loader />}>
                 <Index />
               </Suspense>
             }
@@ -44,7 +47,7 @@ const App = () => (
           <Route
             path="/post/:slug"
             element={
-              <Suspense fallback={<LoadingScreen message="Loading article..." />}>
+              <Suspense fallback={<Loader />}>
                 <BlogPost />
               </Suspense>
             }
@@ -52,7 +55,7 @@ const App = () => (
           <Route
             path="/team"
             element={
-              <Suspense fallback={<LoadingScreen message="Loading team info..." />}>
+              <Suspense fallback={<Loader />}>
                 <OurTeam />
               </Suspense>
             }
@@ -60,7 +63,7 @@ const App = () => (
           <Route
             path="/contact"
             element={
-              <Suspense fallback={<LoadingScreen message="Loading contact page..." />}>
+              <Suspense fallback={<Loader />}>
                 <ContactUs />
               </Suspense>
             }
@@ -68,7 +71,7 @@ const App = () => (
           <Route
             path="/privacy-policy"
             element={
-              <Suspense fallback={<LoadingScreen message="Loading privacy policy..." />}>
+              <Suspense fallback={<Loader />}>
                 <PrivacyPolicy />
               </Suspense>
             }
@@ -76,7 +79,7 @@ const App = () => (
           <Route
             path="/terms-of-service"
             element={
-              <Suspense fallback={<LoadingScreen message="Loading terms of service..." />}>
+              <Suspense fallback={<Loader />}>
                 <TermsOfService />
               </Suspense>
             }
@@ -84,7 +87,7 @@ const App = () => (
           <Route
             path="/category/:category"
             element={
-              <Suspense fallback={<LoadingScreen message="Loading category..." />}>
+              <Suspense fallback={<Loader />}>
                 <CategoryPage />
               </Suspense>
             }
@@ -92,7 +95,7 @@ const App = () => (
           <Route
             path="/search"
             element={
-              <Suspense fallback={<LoadingScreen message="Searching..." />}>
+              <Suspense fallback={<Loader />}>
                 <SearchResults />
               </Suspense>
             }
@@ -100,7 +103,7 @@ const App = () => (
           <Route
             path="/trending"
             element={
-              <Suspense fallback={<LoadingScreen message="Loading trending content..." />}>
+              <Suspense fallback={<Loader />}>
                 <TrendingBlogs />
               </Suspense>
             }
@@ -108,7 +111,7 @@ const App = () => (
           <Route
             path="/movies"
             element={
-              <Suspense fallback={<LoadingScreen message="Loading movie blogs..." />}>
+              <Suspense fallback={<Loader />}>
                 <MovieBlogs />
               </Suspense>
             }
@@ -116,7 +119,7 @@ const App = () => (
           <Route
             path="*"
             element={
-              <Suspense fallback={<LoadingScreen message="Page not found" />}>
+              <Suspense fallback={<Loader />}>
                 <NotFound />
               </Suspense>
             }

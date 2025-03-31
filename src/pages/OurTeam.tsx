@@ -27,6 +27,30 @@ const OurTeam = () => {
       image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
       bio: "With over 10 years in entertainment journalism, Sophia brings deep industry knowledge and exclusive insights to our entertainment coverage."
     },
+    {
+      name: "Marcus Chen",
+      position: "Technology Editor",
+      image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+      bio: "Marcus has been covering technology and gadgets for 8 years, specializing in breaking down complex tech concepts for everyday readers."
+    },
+    {
+      name: "Priya Patel",
+      position: "Lifestyle Content Manager",
+      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=688&q=80",
+      bio: "Priya curates our lifestyle section, bringing the latest trends in fashion, wellness, and culture to our global audience."
+    },
+    {
+      name: "James Wilson",
+      position: "Gaming Editor",
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+      bio: "A lifelong gamer and former esports competitor, James brings insider perspective to our gaming coverage."
+    },
+    {
+      name: "Emma Rodriguez",
+      position: "Social Media Manager",
+      image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=761&q=80",
+      bio: "Emma drives our social media strategy, ensuring our content reaches audiences across all major platforms."
+    }
   ];
 
   return (

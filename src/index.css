@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -77,9 +78,9 @@
 }
 
 @layer components {
-  /* Optimized blog-card styles with tighter spacing */
+  /* Keep existing blog-card styles */
   .blog-card {
-    @apply overflow-hidden transition-all duration-300 hover:shadow-lg bg-black border border-gray-800 h-full;
+    @apply overflow-hidden transition-all duration-300 hover:shadow-lg bg-black border border-gray-800;
   }
   
   .blog-card:hover .blog-card-image {
@@ -95,11 +96,11 @@
   }
   
   .section-title {
-    @apply text-xl md:text-2xl font-bold border-l-4 border-blog-green pl-3 mb-4 text-white;
+    @apply text-xl md:text-2xl font-bold border-l-4 border-blog-green pl-3 mb-6 text-white;
   }
   
   .read-more {
-    @apply text-xs text-blog-green hover:text-white transition-colors duration-300;
+    @apply text-sm text-blog-green hover:text-white transition-colors duration-300;
   }
   
   /* AMOLED optimizations */
@@ -113,11 +114,6 @@
   
   .button-secondary {
     @apply bg-gray-900 hover:bg-gray-800 text-white border border-gray-700;
-  }
-  
-  /* Loading screen animation */
-  .loading-pulse {
-    @apply animate-pulse;
   }
 }
 
@@ -153,32 +149,5 @@
   
   .high-contrast-text {
     @apply text-white font-medium tracking-wide;
-  }
-
-  /* Loading screen utilities */
-  .loading-container {
-    @apply fixed inset-0 z-50 flex items-center justify-center bg-black;
-  }
-  
-  .loading-spinner {
-    @apply flex flex-col items-center justify-center space-y-4 p-8;
-  }
-
-  /* Grid gap utilities for dynamic spacing */
-  .blog-grid {
-    @apply grid gap-3;
-  }
-  
-  .blog-grid-tight {
-    @apply grid gap-2;
-  }
-  
-  /* Dynamic content height control */
-  .content-compact {
-    @apply line-clamp-2;
-  }
-  
-  .content-dynamic {
-    @apply max-h-24 overflow-hidden;
   }
 }

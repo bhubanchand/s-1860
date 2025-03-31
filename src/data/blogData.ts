@@ -1,129 +1,105 @@
+import { BlogPost, useBlogStore } from "./posts";
 
-import { isPostPublished } from "@/lib/utils";
+// Scheduler function to ensure posts are only displayed after their scheduled time
+export const getScheduledPosts = (): BlogPost[] => {
+  const now = new Date();
+  const blogPosts = useBlogStore.getState().blogPosts;
 
-// Blog data interface
-export interface BlogPost {
-  id: number;
-  slug: string;
-  title: string;
-  category: string;
-  excerpt: string;
-  content: string;
-  image: string;
-  createdAt: string; // This will be used as the display date once published
-  publishDate: string; // New field for scheduling: ISO format date string
-  readTime: string;
-  featured: boolean;
-  featuredSize?: "large" | "medium" | "small";
-}
+  return blogPosts.filter(post => {
+    if (!post.time) return true; // Include immediately if no time is specified
 
-// Import all blog posts from the centralized posts file
-import { posts } from "./posts";
+    // Ensure time is a valid string before processing
+    if (typeof post.time !== "string" || !/^\d{1,2}\.\d{1,2}$/.test(post.time)) return false;
 
-// Export the posts as blogPosts for backwards compatibility
-export const blogPosts: BlogPost[] = posts;
+    // Convert "2.09" → [2, 9] to handle single-digit hours/minutes correctly
+    const [hours, minutes] = post.time.split('.').map(num => parseInt(num, 10));
 
-// Get only published posts
-export const getPublishedPosts = (): BlogPost[] => {
-  return blogPosts.filter(post => isPostPublished(post.publishDate || post.createdAt));
+    // Validate time ranges
+    if (isNaN(hours) || isNaN(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+      return false; // Ignore invalid time values
+    }
+
+    // Create a Date object for today's date with the specified time
+    const postDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+
+    return postDate.getTime() <= now.getTime(); // Show only if the scheduled time has passed
+  });
 };
 
 // Sorting by createdAt in descending order (newest first)
 export const sortBlogPosts = (posts: BlogPost[]): BlogPost[] => {
+  const now = new Date();
+  now.setHours(0, 0, 0, 0); // Reset time to 00:00:00 for today’s date
+
   return [...posts]
-    .filter(post => post.createdAt && isPostPublished(post.publishDate || post.createdAt))
-    .sort((a, b) => {
-      const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-      const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-      return dateB - dateA; // Sort newest first
-    });
+    .filter(post => {
+      if (!post.createdAt) return false;
+
+      const postDate = new Date(post.createdAt);
+      postDate.setHours(0, 0, 0, 0); // Normalize post date to ignore time
+      
+      return postDate.getTime() <= now.getTime(); // Exclude future dates
+    })
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()); // Sort newest first
 };
 
 // Get featured posts ensuring we have the right sizes and newest posts get priority
 export const getFeaturedPosts = (): BlogPost[] => {
-  // Get all published posts
-  const publishedPosts = getPublishedPosts();
-  
-  // Sort by date (newest first)
-  const sortedPosts = sortBlogPosts(publishedPosts);
-  
-  if (sortedPosts.length === 0) return [];
+  const blogPosts = getScheduledPosts();
+  const allFeaturedPosts = sortBlogPosts(blogPosts.filter(post => post.featured));
 
-  // Use the 6 newest posts as featured
-  const newestPosts = sortedPosts.slice(0, 6);
-  
-  // Assign the most recent post as the large featured post
-  const mainFeaturedPost = { ...newestPosts[0], featuredSize: "large" as const };
-  
-  // Assign the next 5 posts as medium featured posts
-  const mediumFeaturedPosts = newestPosts.slice(1, 6).map(post => ({ 
-    ...post, 
-    featuredSize: "medium" as const 
-  }));
+  if (allFeaturedPosts.length === 0) return [];
 
-  // Combine large post with medium posts
-  return [mainFeaturedPost, ...mediumFeaturedPosts];
+  const mostRecentDate = Math.max(...allFeaturedPosts.map(post => new Date(post.createdAt).getTime()));
+
+  const latestFeaturedPosts = allFeaturedPosts
+    .filter(post => new Date(post.createdAt).getTime() === mostRecentDate)
+    .sort((a, b) => b.id - a.id);
+
+  const mainFeaturedPost = latestFeaturedPosts.length > 0 
+    ? { ...latestFeaturedPosts[0], featuredSize: "large" as const }
+    : null;
+
+  const remainingFeaturedPosts = allFeaturedPosts.filter(post => post.id !== mainFeaturedPost?.id);
+  const sortedRemainingPosts = remainingFeaturedPosts.sort((a, b) => {
+    const dateDiff = new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    return dateDiff !== 0 ? dateDiff : b.id - a.id;
+  });
+
+  const mediumFeaturedPosts = sortedRemainingPosts
+    .slice(0, 3)
+    .map(post => ({ ...post, featuredSize: "medium" as const }));
+
+  return mainFeaturedPost ? [mainFeaturedPost, ...mediumFeaturedPosts] : [...mediumFeaturedPosts];
 };
 
-// New function to prevent blog post repetition
-export const getPostsWithoutRepetition = (
-  category: string,
-  count: number = 4,
-  excludeIds: number[] = []
-): BlogPost[] => {
-  const filteredPosts = getPublishedPosts().filter(
-    (post) => post.category === category && !excludeIds.includes(post.id)
-  );
+// Utility functions (All now filter through the scheduler)
+export const getPostsWithoutRepetition = (category: string, count: number = 4, excludeIds: number[] = []): BlogPost[] => {
+  const blogPosts = getScheduledPosts();
+  const filteredPosts = blogPosts.filter(post => post.category === category && !excludeIds.includes(post.id));
   return sortBlogPosts(filteredPosts).slice(0, count);
 };
 
-// Utility functions
 export const getRecentPosts = (count: number = 6, excludeIds: number[] = []): BlogPost[] => {
-  return sortBlogPosts(
-    getPublishedPosts().filter(post => !excludeIds.includes(post.id))
-  ).slice(0, count);
+  const blogPosts = getScheduledPosts();
+  return sortBlogPosts(blogPosts.filter(post => !excludeIds.includes(post.id))).slice(0, count);
 };
 
 export const getPostsByCategory = (category: string, count?: number, excludeIds: number[] = []): BlogPost[] => {
-  const filteredPosts = getPublishedPosts().filter(
-    (post) => post.category === category && !excludeIds.includes(post.id)
-  );
+  const blogPosts = getScheduledPosts();
+  const filteredPosts = blogPosts.filter(post => post.category === category && !excludeIds.includes(post.id));
   return count ? sortBlogPosts(filteredPosts).slice(0, count) : sortBlogPosts(filteredPosts);
 };
 
 export const getRelatedPosts = (currentPostId: number, count: number = 3): BlogPost[] => {
-  const currentPost = getPublishedPosts().find((post) => post.id === currentPostId);
+  const blogPosts = getScheduledPosts();
+  const currentPost = blogPosts.find(post => post.id === currentPostId);
   if (!currentPost) return [];
 
-  return sortBlogPosts(
-    getPublishedPosts().filter((post) => post.id !== currentPostId && post.category === currentPost.category)
-  ).slice(0, count);
+  return sortBlogPosts(blogPosts.filter(post => post.id !== currentPostId && post.category === currentPost.category)).slice(0, count);
 };
 
 export const getPostBySlug = (slug: string): BlogPost | undefined => {
-  // For individual post display, we need to check if it's published
-  const post = blogPosts.find((post) => post.slug === slug);
-  if (!post) return undefined;
-  
-  // Only return the post if it's published or scheduled for publication
-  return isPostPublished(post.publishDate || post.createdAt) ? post : undefined;
-};
-
-// Helper function to create a new blog post with scheduling
-export const createScheduledPost = (
-  postData: Omit<BlogPost, 'id' | 'publishDate' | 'createdAt'>, 
-  scheduledDate: string
-): BlogPost => {
-  // Generate a new unique ID
-  const newId = Math.max(...blogPosts.map(post => post.id)) + 1;
-  
-  // Current date for createdAt (will be shown as publication date)
-  const createdAt = new Date().toISOString().slice(0, 10);
-  
-  return {
-    ...postData,
-    id: newId,
-    createdAt: createdAt,
-    publishDate: scheduledDate,
-  };
+  const blogPosts = getScheduledPosts();
+  return blogPosts.find(post => post.slug === slug);
 };

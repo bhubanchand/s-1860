@@ -3,13 +3,14 @@ import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import BlogLayout from "@/components/BlogLayout";
 import BlogCard from "@/components/BlogCard";
-import { blogPosts, BlogPost } from "@/data/blogData";
+import { BlogPost, useBlogStore } from "@/data/posts";
+
 
 const SearchResults = () => {
   const [searchParams] = useSearchParams();
   const query = searchParams.get("q") || "";
   const [results, setResults] = useState<BlogPost[]>([]);
-  
+    const blogPosts = useBlogStore.getState().blogPosts;
   useEffect(() => {
     if (query) {
       const searchResults = blogPosts.filter(post => 
