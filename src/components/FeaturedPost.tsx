@@ -8,6 +8,7 @@ interface FeaturedPostProps {
   title: string;
   excerpt: string;
   slug: string;
+  date: string;
   size?: "large" | "medium" | "small";
 }
 
@@ -17,6 +18,7 @@ const FeaturedPost: React.FC<FeaturedPostProps> = ({
   title,
   excerpt,
   slug,
+  date,
   size = "medium",
 }) => {
   const sizeClasses = {
