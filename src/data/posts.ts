@@ -2,7 +2,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import axios from "axios";
-import { getCurrentISTDateTime, isPostPublished } from "@/lib/utils";
+import { formatInTimeZone } from "date-fns-tz";
 
 const API_URL = "https://script.google.com/macros/s/AKfycbzs97wtjvWKT8odbHgsBWT4g8RH_H0Mag-hXTSgDtcwbBXH8hoKoqZJXVWnFHRn2Ora/exec";
 
@@ -29,6 +29,50 @@ type BlogStore = {
   startAutoFetch: () => () => void;
   getScheduledPosts: () => BlogPost[];
 };
+
+// Get current date and time in IST (moved from utils to avoid circular imports)
+export function getCurrentISTDateTime(): Date {
+  const now = new Date();
+  return new Date(formatInTimeZone(now, "Asia/Kolkata", "yyyy-MM-dd'T'HH:mm:ss"));
+}
+
+// Check if post should be published based on time field
+export function isPostPublished(post: BlogPost): boolean {
+  try {
+    // If no time is specified, always publish
+    if (!post.time || post.time.trim() === '') return true;
+    
+    // Try to parse and validate the time format (HH.MM)
+    if (!/^\d{1,2}\.\d{1,2}$/.test(post.time)) {
+      console.warn(`Invalid time format for post ID ${post.id}: ${post.time}`);
+      return false;
+    }
+    
+    // Get current date/time
+    const now = getCurrentISTDateTime();
+    
+    // Get hours and minutes from string like "14.30"
+    const [hoursStr, minutesStr] = post.time.split('.');
+    const hours = parseInt(hoursStr, 10);
+    const minutes = parseInt(minutesStr, 10);
+    
+    // Basic validation
+    if (isNaN(hours) || isNaN(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+      console.warn(`Invalid time values for post ID ${post.id}: ${post.time}`);
+      return false;
+    }
+    
+    // Create post time (today with specified time)
+    const postTime = new Date();
+    postTime.setHours(hours, minutes, 0, 0);
+    
+    // Compare with current time
+    return postTime.getTime() <= now.getTime();
+  } catch (err) {
+    console.error("Error checking publish status:", err);
+    return false;
+  }
+}
 
 export const useBlogStore = create<BlogStore>()(
   persist(
@@ -60,36 +104,7 @@ export const useBlogStore = create<BlogStore>()(
 
       getScheduledPosts: () => {
         const blogPosts = get().blogPosts;
-        const now = getCurrentISTDateTime();
-        
-        return blogPosts.filter(post => {
-          // Include immediately if no time is specified
-          if (!post.time || post.time.trim() === '') return true;
-          
-          // Try to parse and validate the time format (HH.MM)
-          if (!/^\d{1,2}\.\d{1,2}$/.test(post.time)) {
-            console.warn(`Invalid time format for post ID ${post.id}: ${post.time}`);
-            return false;
-          }
-          
-          // Get hours and minutes from string like "14.30"
-          const [hoursStr, minutesStr] = post.time.split('.');
-          const hours = parseInt(hoursStr, 10);
-          const minutes = parseInt(minutesStr, 10);
-          
-          // Basic validation
-          if (isNaN(hours) || isNaN(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
-            console.warn(`Invalid time values for post ID ${post.id}: ${post.time}`);
-            return false;
-          }
-          
-          // Create post date (today with specified time)
-          const postDate = new Date();
-          postDate.setHours(hours, minutes, 0, 0);
-          
-          // Compare with current time
-          return postDate.getTime() <= now.getTime();
-        });
+        return blogPosts.filter(post => isPostPublished(post));
       },
 
       startAutoFetch: () => {

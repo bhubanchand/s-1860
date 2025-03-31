@@ -23,12 +23,16 @@ const BlogProvider = () => {
         });
       }, 200);
       
-      // Fetch posts
-      await fetchPosts();
-      
-      // Complete progress and clear interval
-      clearInterval(progressInterval);
-      setProgress(100);
+      try {
+        // Fetch posts
+        await fetchPosts();
+      } catch (err) {
+        console.error("Error in BlogProvider:", err);
+      } finally {
+        // Complete progress and clear interval
+        clearInterval(progressInterval);
+        setProgress(100);
+      }
     };
 
     loadData();
@@ -39,7 +43,7 @@ const BlogProvider = () => {
     }
   }, [fetchPosts, startAutoFetch]);
 
-  if (loading) {
+  if (loading && progress < 100) {
     return <LoadingScreen message="Loading blog content..." progress={progress} />;
   }
 

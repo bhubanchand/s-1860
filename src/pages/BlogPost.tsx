@@ -41,8 +41,11 @@ const BlogPost = () => {
     return <LoadingScreen message="Loading article..." />;
   }
 
-  // Function to render markdown-like content as HTML
+  // Function to render markdown-like content as HTML with improved formatting
   const renderFormattedContent = (content: string) => {
+    if (!content) return <p>No content available.</p>;
+    
+    // Split by paragraphs (double newlines)
     return content.split('\n\n').map((paragraph, index) => {
       // Handle headings
       if (paragraph.startsWith('## ')) {
@@ -58,7 +61,7 @@ const BlogPost = () => {
           </blockquote>
         );
       }
-      // Handle lists
+      // Handle unordered lists
       else if (paragraph.includes('\n- ')) {
         const listItems = paragraph.split('\n- ');
         return (
