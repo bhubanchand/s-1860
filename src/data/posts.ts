@@ -86,10 +86,10 @@ export const useBlogStore = create<BlogStore>()(
           const response = await axios.get(API_URL);
           const newPosts: BlogPost[] = response.data;
 
-          // Process content for markdown-like formatting
+          // Process content - no special processing needed since we're using HTML directly
           const processedPosts = newPosts.map(post => ({
             ...post,
-            // Ensure content is a string
+            // Ensure content is a string but don't modify HTML
             content: typeof post.content === 'string' ? post.content : '',
           }));
 

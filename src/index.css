@@ -5,45 +5,27 @@
 
 @layer base {
   :root {
-    /* AMOLED optimized dark theme */
-    --background: 0 0% 0%;  /* Pure black for AMOLED */
-    --foreground: 0 0% 100%;  /* Pure white for max contrast */
+    --blog-green: #10b981;
 
-    --card: 0 0% 3%;  /* Near black for cards */
-    --card-foreground: 0 0% 100%;
-
-    --popover: 0 0% 3%;
-    --popover-foreground: 0 0% 100%;
-
-    --primary: 122 39% 49%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 0 0% 7%;  /* Darker secondary */
-    --secondary-foreground: 0 0% 100%;
-
-    --muted: 0 0% 15%;  /* Slightly lighter muted */
-    --muted-foreground: 0 0% 80%;  /* Brighter muted text */
-
-    --accent: 14 100% 57%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 0 0% 20%;
-    --input: 0 0% 15%;
-    --ring: 0 0% 28%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 0%;  /* Pure black sidebar */
-    --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 122 39% 49%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 7%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 0 0% 20%;
-    --sidebar-ring: 14 100% 57%;
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 7%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 6%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 11%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
   }
 }
 
@@ -52,102 +34,196 @@
     @apply border-border;
   }
 
-  html {
-    scroll-behavior: smooth;
-  }
-
   body {
-    @apply bg-black text-foreground antialiased; /* Changed to pure black */
-    font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
-  
-  /* High contrast text improvements for readability */
+
   h1, h2, h3, h4, h5, h6 {
-    @apply text-white font-semibold;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+    @apply font-bold mt-6 mb-4;
   }
-  
-  p {
-    @apply text-gray-100;
-    letter-spacing: 0.01em;
+
+  h1 {
+    @apply text-4xl;
   }
-  
+
+  h2 {
+    @apply text-3xl;
+  }
+
+  h3 {
+    @apply text-2xl;
+  }
+
+  h4 {
+    @apply text-xl;
+  }
+
+  h5 {
+    @apply text-lg;
+  }
+
+  h6 {
+    @apply text-base font-semibold;
+  }
+
   a {
-    @apply text-blog-green hover:text-white transition-colors duration-200;
+    @apply text-blog-green hover:underline;
   }
-}
 
-@layer components {
-  /* Keep existing blog-card styles */
-  .blog-card {
-    @apply overflow-hidden transition-all duration-300 hover:shadow-lg bg-black border border-gray-800;
+  p {
+    @apply mb-4;
   }
-  
-  .blog-card:hover .blog-card-image {
-    @apply scale-105;
-  }
-  
-  .blog-card-image {
-    @apply transition-transform duration-500 ease-in-out;
-  }
-  
-  .blog-headline {
-    @apply font-bold leading-tight hover:text-blog-green transition-colors duration-300 text-white;
-  }
-  
-  .section-title {
-    @apply text-xl md:text-2xl font-bold border-l-4 border-blog-green pl-3 mb-6 text-white;
-  }
-  
-  .read-more {
-    @apply text-sm text-blog-green hover:text-white transition-colors duration-300;
-  }
-  
-  /* AMOLED optimizations */
-  .card, .dialog, .popover, .dropdown {
-    @apply bg-black border border-gray-800;
-  }
-  
-  .button-primary {
-    @apply bg-blog-green hover:bg-blog-green/90 text-white font-medium;
-  }
-  
-  .button-secondary {
-    @apply bg-gray-900 hover:bg-gray-800 text-white border border-gray-700;
-  }
-}
 
-@layer utilities {
-  .text-shadow {
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
+  ul {
+    @apply list-disc pl-6 mb-4;
   }
-  
+
+  ol {
+    @apply list-decimal pl-6 mb-4;
+  }
+
+  li {
+    @apply mb-2;
+  }
+
+  blockquote {
+    @apply border-l-4 border-blog-green pl-4 italic my-4 text-gray-300;
+  }
+
+  code {
+    @apply bg-gray-800 px-1 py-0.5 rounded text-sm;
+  }
+
+  pre {
+    @apply bg-gray-800 p-4 rounded mb-4 overflow-auto;
+  }
+
+  hr {
+    @apply my-6 border-gray-700;
+  }
+
+  img {
+    @apply max-w-full h-auto rounded-lg mb-4;
+  }
+
+  /* Custom classes */
   .text-shadow-lg {
-    text-shadow: 0 4px 8px rgba(0, 0, 0, 1);
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
   }
 
-  /* Keep existing animation classes */
-  .appear-animation > *:nth-child(1) { animation-delay: 0.1s; }
-  .appear-animation > *:nth-child(2) { animation-delay: 0.2s; }
-  .appear-animation > *:nth-child(3) { animation-delay: 0.3s; }
-  .appear-animation > *:nth-child(4) { animation-delay: 0.4s; }
-  .appear-animation > *:nth-child(5) { animation-delay: 0.5s; }
-  .appear-animation > *:nth-child(6) { animation-delay: 0.6s; }
-  .appear-animation > *:nth-child(7) { animation-delay: 0.7s; }
-  .appear-animation > *:nth-child(8) { animation-delay: 0.8s; }
-  .appear-animation > *:nth-child(9) { animation-delay: 0.9s; }
-  .appear-animation > *:nth-child(10) { animation-delay: 1s; }
-  
-  /* AMOLED specific utilities */
-  .amoled-bg {
-    @apply bg-black;
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-in-out;
   }
-  
-  .amoled-card {
-    @apply bg-black border border-gray-800 shadow-lg shadow-black/50;
+
+  .animate-fade-up {
+    animation: fadeUp 0.8s ease-out;
   }
-  
-  .high-contrast-text {
-    @apply text-white font-medium tracking-wide;
+
+  .delay-100 {
+    animation-delay: 100ms;
+  }
+
+  .delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .section-title {
+    @apply text-2xl font-bold relative;
+  }
+
+  .section-title::after {
+    content: "";
+    @apply absolute left-0 -bottom-2 w-16 h-1 bg-blog-green;
+  }
+
+  /* Animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Additional styling for HTML content in blog posts */
+  .blog-content-html {
+    @apply text-gray-200 leading-relaxed;
+  }
+
+  .blog-content-html h1 {
+    @apply text-3xl font-bold mt-8 mb-4;
+  }
+
+  .blog-content-html h2 {
+    @apply text-2xl font-bold mt-8 mb-4;
+  }
+
+  .blog-content-html h3 {
+    @apply text-xl font-bold mt-6 mb-3;
+  }
+
+  .blog-content-html h4 {
+    @apply text-lg font-bold mt-5 mb-2;
+  }
+
+  .blog-content-html p {
+    @apply mb-6;
+  }
+
+  .blog-content-html ul {
+    @apply list-disc pl-6 my-4 space-y-2;
+  }
+
+  .blog-content-html ol {
+    @apply list-decimal pl-6 my-4 space-y-2;
+  }
+
+  .blog-content-html li {
+    @apply text-gray-200;
+  }
+
+  .blog-content-html a {
+    @apply text-blog-green hover:underline;
+  }
+
+  .blog-content-html blockquote {
+    @apply border-l-4 border-blog-green pl-4 italic my-8 text-gray-300;
+  }
+
+  .blog-content-html b, .blog-content-html strong {
+    @apply font-bold;
+  }
+
+  .blog-content-html i, .blog-content-html em {
+    @apply italic;
+  }
+
+  .blog-content-html img {
+    @apply my-6 rounded-lg max-w-full h-auto;
+  }
+
+  .blog-content-html pre {
+    @apply bg-gray-800 p-4 rounded-md my-4 overflow-x-auto;
+  }
+
+  .blog-content-html code {
+    @apply bg-gray-800 px-2 py-1 rounded text-sm;
+  }
+
+  .blog-content-html hr {
+    @apply my-8 border-t border-gray-700;
   }
 }

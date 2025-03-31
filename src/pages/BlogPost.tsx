@@ -41,78 +41,6 @@ const BlogPost = () => {
     return <LoadingScreen message="Loading article..." />;
   }
 
-  // Function to render markdown-like content as HTML with improved formatting
-  const renderFormattedContent = (content: string) => {
-    if (!content) return <p>No content available.</p>;
-    
-    // Split by paragraphs (double newlines)
-    return content.split('\n\n').map((paragraph, index) => {
-      // Handle headings
-      if (paragraph.startsWith('## ')) {
-        return <h2 key={index} className="text-xl font-bold mt-8 mb-4">{paragraph.replace('## ', '')}</h2>;
-      } else if (paragraph.startsWith('# ')) {
-        return <h1 key={index} className="text-2xl font-bold mt-8 mb-4">{paragraph.replace('# ', '')}</h1>;
-      }
-      // Handle blockquotes
-      else if (paragraph.startsWith('> ')) {
-        return (
-          <blockquote key={index} className="border-l-4 border-blog-green pl-4 italic my-8 text-gray-300">
-            {paragraph.replace('> ', '')}
-          </blockquote>
-        );
-      }
-      // Handle unordered lists
-      else if (paragraph.includes('\n- ')) {
-        const listItems = paragraph.split('\n- ');
-        return (
-          <ul key={index} className="list-disc pl-6 my-6 space-y-2">
-            {listItems[0] && <p className="mb-2">{listItems[0]}</p>}
-            {listItems.slice(1).map((item, i) => (
-              <li key={i} className="text-gray-200">{item}</li>
-            ))}
-          </ul>
-        );
-      }
-      // Handle numbered lists
-      else if (paragraph.includes('\n1. ')) {
-        const listItems = paragraph.split('\n');
-        const intro = listItems[0] !== '' && !listItems[0].match(/^\d+\. /) ? listItems[0] : null;
-        const items = listItems.filter(item => item.match(/^\d+\. /)).map(item => item.replace(/^\d+\. /, ''));
-        
-        return (
-          <div key={index} className="my-6">
-            {intro && <p className="mb-2">{intro}</p>}
-            <ol className="list-decimal pl-6 space-y-2">
-              {items.map((item, i) => (
-                <li key={i} className="text-gray-200">{item}</li>
-              ))}
-            </ol>
-          </div>
-        );
-      }
-      // Parse inline formatting within paragraphs
-      else {
-        // Process bold text, italic text, and links within paragraphs
-        let formattedText = paragraph;
-        
-        // Replace bold text: **bold**
-        formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        
-        // Replace italic text: *italic*
-        formattedText = formattedText.replace(/\*(.*?)\*/g, '<em>$1</em>');
-        
-        // Replace links: [text](url)
-        formattedText = formattedText.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" class="text-blog-green hover:underline" target="_blank" rel="noopener noreferrer">$1</a>');
-        
-        return (
-          <p key={index} 
-             className="leading-relaxed mb-6" 
-             dangerouslySetInnerHTML={{ __html: formattedText }} />
-        );
-      }
-    });
-  };
-
   return (
     <BlogLayout>
       <div className="pt-20">
@@ -147,10 +75,11 @@ const BlogPost = () => {
                 {post.excerpt}
               </p>
               
-              {/* Display the formatted post content */}
-              <div className="leading-relaxed">
-                {renderFormattedContent(post.content)}
-              </div>
+              {/* Render the HTML content directly */}
+              <div 
+                className="blog-content-html" 
+                dangerouslySetInnerHTML={{ __html: post.content }}
+              />
             </div>
 
             {/* Tags */}

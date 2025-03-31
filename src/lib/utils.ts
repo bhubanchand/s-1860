@@ -66,3 +66,14 @@ export function formatRelativeTime(dateString: string): string {
     return dateString
   }
 }
+
+// Get current date and time in IST
+export function getCurrentISTDateTime(): Date {
+  const now = new Date()
+  return new Date(formatInTimeZone(now, "Asia/Kolkata", "yyyy-MM-dd'T'HH:mm:ss"))
+}
+
+// Check if post should be published based on time field (moved to posts.ts - kept for backwards compatibility)
+export function isPostPublished(): boolean {
+  return true; // This is just a stub - actual implementation is in posts.ts
+}
