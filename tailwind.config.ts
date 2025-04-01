@@ -53,22 +53,12 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				sidebar: {
-					DEFAULT: 'hsl(var(--sidebar-background))',
-					foreground: 'hsl(var(--sidebar-foreground))',
-					primary: 'hsl(var(--sidebar-primary))',
-					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-					accent: 'hsl(var(--sidebar-accent))',
-					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-					border: 'hsl(var(--sidebar-border))',
-					ring: 'hsl(var(--sidebar-ring))'
-				},
 				blog: {
 					dark: '#000000', // Changed to pure black for AMOLED
-					green: '#4caf50',
+					green: '#10b981',
 					accent: '#ff5722'
 				},
-				// New AMOLED optimized colors
+				// AMOLED optimized colors
 				amoled: {
 					black: '#000000',
 					dark: '#0A0A0A',
@@ -114,9 +104,21 @@ export default {
 					'0%': { opacity: '0', transform: 'translateX(20px)' },
 					'100%': { opacity: '1', transform: 'translateX(0)' }
 				},
+				'fade-right': {
+					'0%': { opacity: '0', transform: 'translateX(-20px)' },
+					'100%': { opacity: '1', transform: 'translateX(0)' }
+				},
 				'scale-in': {
 					'0%': { opacity: '0', transform: 'scale(0.95)' },
 					'100%': { opacity: '1', transform: 'scale(1)' }
+				},
+				'glow-pulse': {
+					'0%, 100%': { 
+						boxShadow: '0 0 0 0 rgba(16, 185, 129, 0)'
+					},
+					'50%': { 
+						boxShadow: '0 0 20px 5px rgba(16, 185, 129, 0.25)'
+					}
 				}
 			},
 			animation: {
@@ -126,7 +128,9 @@ export default {
 				'fade-up': 'fade-up 0.5s ease-out forwards',
 				'fade-down': 'fade-down 0.5s ease-out forwards',
 				'fade-left': 'fade-left 0.5s ease-out forwards',
-				'scale-in': 'scale-in 0.3s ease-out forwards'
+				'fade-right': 'fade-right 0.5s ease-out forwards',
+				'scale-in': 'scale-in 0.3s ease-out forwards',
+				'glow-pulse': 'glow-pulse 3s infinite ease-in-out'
 			}
 		}
 	},

@@ -3,8 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Moon, Sun } from 'lucide-react';
 
 const NightModeToggle: React.FC = () => {
-  // Since we're now always in AMOLED dark mode, this toggle becomes 
-  // a contrast toggle between dark and ultra-dark (AMOLED)
+  // Since we're using AMOLED dark mode
   const [isAmoledMode, setIsAmoledMode] = useState(true);
   
   useEffect(() => {
@@ -19,34 +18,36 @@ const NightModeToggle: React.FC = () => {
     // Apply AMOLED mode styles
     if (isAmoledMode) {
       document.documentElement.classList.add('amoled-mode');
-      document.body.style.background = '#000000'; // Pure black
+      document.body.style.background = '#000000'; // Pure black for AMOLED screens
       localStorage.setItem('amoledMode', 'true');
     } else {
       document.documentElement.classList.remove('amoled-mode');
-      document.body.style.background = '#121212'; // Dark gray
+      document.body.style.background = '#121212'; // Dark gray for standard dark mode
       localStorage.setItem('amoledMode', 'false');
     }
   }, [isAmoledMode]);
   
   return (
-    <button
-      onClick={() => setIsAmoledMode(!isAmoledMode)}
-      className={`relative p-2 rounded-full transition-all duration-300 ${
-        isAmoledMode 
-          ? 'bg-black text-gray-400 border border-gray-800' 
-          : 'bg-gray-900 text-gray-300'
-      }`}
-      aria-label={isAmoledMode ? 'Switch to standard dark mode' : 'Switch to AMOLED mode'}
-    >
-      {isAmoledMode ? (
-        <Moon className="w-5 h-5" />
-      ) : (
-        <Sun className="w-5 h-5" />
-      )}
-      <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+    <div className="relative group">
+      <button
+        onClick={() => setIsAmoledMode(!isAmoledMode)}
+        className={`p-2 rounded-full transition-all duration-300 ${
+          isAmoledMode 
+            ? 'bg-black text-gray-400 border border-gray-800' 
+            : 'bg-gray-900 text-gray-300'
+        }`}
+        aria-label={isAmoledMode ? 'Switch to standard dark mode' : 'Switch to AMOLED mode'}
+      >
+        {isAmoledMode ? (
+          <Moon className="w-5 h-5" />
+        ) : (
+          <Sun className="w-5 h-5" />
+        )}
+      </button>
+      <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-black/80 text-white px-2 py-1 rounded">
         {isAmoledMode ? 'AMOLED Mode' : 'Standard Dark'}
       </span>
-    </button>
+    </div>
   );
 };
 
