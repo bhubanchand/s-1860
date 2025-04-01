@@ -1,227 +1,156 @@
 
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import BlogLayout from "@/components/BlogLayout";
-import FeaturedPost from "@/components/FeaturedPost";
-import BlogCard from "@/components/BlogCard";
-import ScrollToTop from "@/components/ScrollToTop";
-import { getFeaturedPosts, getPostsByCategory, getRecentPosts} from "@/data/blogData";
+import { ArrowRight } from "lucide-react";
 
 const Index = () => {
-  const featuredPosts = getFeaturedPosts();
-  // Track IDs of posts that have been displayed to prevent repetition
-  const displayedPostIds = featuredPosts.map(post => post.id);
-   
-  // Get category posts excluding already displayed posts
-  const entertainmentPosts = getPostsByCategory("Entertainment", 4, displayedPostIds);
-  
-  // Update displayed posts IDs
-  entertainmentPosts.forEach(post => displayedPostIds.push(post.id));
-  
-  // Get more category posts excluding already displayed posts
-  const technologyPosts = getPostsByCategory("Technology", 4, displayedPostIds);
-  
-  // Update displayed posts IDs again
-  technologyPosts.forEach(post => displayedPostIds.push(post.id));
-  
-  // Get movie posts excluding already displayed posts
-  const moviePosts = getPostsByCategory("Movies", 4, displayedPostIds);
-  
-  // Update displayed posts IDs with movie posts
-  moviePosts.forEach(post => displayedPostIds.push(post.id));
-  
-  // Get recent posts that haven't been displayed yet
-  const recentPosts = getRecentPosts(6, displayedPostIds);
-  const sectionsRef = useRef<HTMLDivElement[]>([]);
-
-  useEffect(() => {
-    const observerOptions = {
-      root: null,
-      rootMargin: "0px",
-      threshold: 0.1,
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("animate-fade-up");
-          observer.unobserve(entry.target);
-        }
-      });
-    }, observerOptions);
-
-    sectionsRef.current.forEach((section) => {
-      if (section) observer.observe(section);
-    });
-
-    return () => {
-      sectionsRef.current.forEach((section) => {
-        if (section) observer.unobserve(section);
-      });
-    };
-  }, []);
-
-  const addToRefs = (el: HTMLDivElement) => {
-    if (el && !sectionsRef.current.includes(el)) {
-      sectionsRef.current.push(el);
-    }
-  };
-
   return (
-    <BlogLayout>
-      <div className="pt-16">
-        {/* Hero Section */}
-        <section className="container mx-auto px-4 mt-4">
-          <div className="grid grid-cols-6 gap-4 appear-animation">
-            {featuredPosts.map((post) => (
-              <FeaturedPost
-                key={post.id}
-                image={post.image}
-                category={post.category}
-                title={post.title}
-                excerpt={post.excerpt}
-                slug={post.slug}
-                date={post.createdAt}
-                size={post.featuredSize}
-              />
-            ))}
-          </div>
-        </section>
+    <div className="flex flex-col min-h-screen bg-black text-white">
+      {/* Navigation */}
+      <header className="container mx-auto px-4 py-6">
+        <div className="flex justify-between items-center">
+          <div className="text-2xl font-bold">FW</div>
+          <nav className="hidden md:flex space-x-8">
+            <Link to="/" className="text-white hover:text-blog-green transition-colors">Home</Link>
+            <Link to="/services" className="text-white hover:text-blog-green transition-colors">Services</Link>
+            <Link to="/work" className="text-white hover:text-blog-green transition-colors">Work</Link>
+            <Link to="/blog" className="text-white hover:text-blog-green transition-colors">Blog</Link>
+            <Link to="/about" className="text-white hover:text-blog-green transition-colors">About</Link>
+            <Link to="/contact" className="text-white hover:text-blog-green transition-colors">Contact</Link>
+          </nav>
+          <button className="md:hidden text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+          </button>
+        </div>
+      </header>
 
-        {/* Entertainment Section */}
-        <section 
-          ref={addToRefs} 
-          className="container mx-auto px-4 mt-12 opacity-0"
+      {/* Hero Section */}
+      <main className="flex-grow">
+        <section className="relative h-screen flex items-center bg-black border-b border-white/5" 
+          style={{
+            backgroundImage: "url(/images/grid-pattern.svg)",
+            backgroundSize: "20px 20px",
+          }}
         >
-          <h2 className="section-title">Entertainment</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 appear-animation">
-            {entertainmentPosts.map((post) => (
-              <BlogCard
-                key={post.id}
-                image={post.image}
-                category={post.category}
-                title={post.title}
-                excerpt={post.excerpt}
-                date={post.createdAt}
-                readTime={post.readTime}
-                slug={post.slug}
-              />
-            ))}
-          </div>
-        </section>
-
-        {/* Trending Section */}
-        <section 
-          ref={addToRefs} 
-          className="container mx-auto px-4 mt-12 opacity-0"
-        >
-          <div className="bg-secondary rounded-lg p-4">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="section-title mb-0">Trending Now</h2>
-              <Link to="/trending" className="text-blog-green hover:text-blog-accent transition-colors text-sm font-medium">
-                View All
+          <div className="absolute inset-0 bg-[url('/lovable-uploads/c8d213c7-03e1-46ae-b981-5c23cac57b91.png')] bg-right-top bg-no-repeat opacity-60"></div>
+          <div className="container mx-auto px-4 z-10">
+            <div className="max-w-3xl">
+              <h1 className="text-5xl md:text-7xl font-bold mb-6">
+                We <span className="text-blog-green">brand</span> it all.
+              </h1>
+              <p className="text-xl text-gray-400 mb-8">
+                A creative agency focused on growing your brand through strategic design and digital marketing.
+              </p>
+              <Link to="/contact" className="inline-flex items-center bg-blog-green hover:bg-opacity-90 text-black font-bold py-3 px-6 rounded-sm transition-all">
+                Get Started <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </div>
-            <div className="grid grid-cols-1 gap-4 appear-animation">
-              {recentPosts.slice(0, 3).map((post) => (
-                <BlogCard
-                  key={post.id}
-                  image={post.image}
-                  category={post.category}
-                  title={post.title}
-                  excerpt={post.excerpt}
-                  date={post.createdAt}
-                  readTime={post.readTime}
-                  slug={post.slug}
-                  layout="horizontal"
-                />
-              ))}
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section className="py-20 bg-black">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {/* Feature 1 */}
+              <div className="bg-neutral-900 p-8 rounded-sm border border-white/5 hover:border-blog-green/30 transition-all group">
+                <div className="bg-neutral-800 w-10 h-10 flex items-center justify-center rounded-full mb-6">
+                  <span className="text-blog-green">01</span>
+                </div>
+                <h3 className="text-xl font-bold mb-4">Future-forward</h3>
+                <p className="text-gray-400 mb-6">We create cutting-edge digital experiences that push boundaries and set new standards.</p>
+                <Link to="/services" className="text-blog-green group-hover:underline inline-flex items-center">
+                  Learn more <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </div>
+
+              {/* Feature 2 */}
+              <div className="bg-neutral-900 p-8 rounded-sm border border-white/5 hover:border-blog-green/30 transition-all group">
+                <div className="bg-neutral-800 w-10 h-10 flex items-center justify-center rounded-full mb-6">
+                  <span className="text-blog-green">02</span>
+                </div>
+                <h3 className="text-xl font-bold mb-4">The Winning Edge</h3>
+                <p className="text-gray-400 mb-6">Strategic solutions designed to give your brand the competitive advantage it deserves.</p>
+                <Link to="/services" className="text-blog-green group-hover:underline inline-flex items-center">
+                  Learn more <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </div>
+
+              {/* Feature 3 */}
+              <div className="bg-neutral-900 p-8 rounded-sm border border-white/5 hover:border-blog-green/30 transition-all group">
+                <div className="bg-neutral-800 w-10 h-10 flex items-center justify-center rounded-full mb-6">
+                  <span className="text-blog-green">03</span>
+                </div>
+                <h3 className="text-xl font-bold mb-4">Simple Solutions</h3>
+                <p className="text-gray-400 mb-6">We distill complex ideas into clean, intuitive designs that effectively communicate your message.</p>
+                <Link to="/services" className="text-blog-green group-hover:underline inline-flex items-center">
+                  Learn more <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Movies Section */}
-        <section 
-          ref={addToRefs} 
-          className="container mx-auto px-4 mt-12 opacity-0"
-        >
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="section-title mb-0">Latest Movies</h2>
-            <Link to="/movies" className="text-blog-green hover:text-blog-accent transition-colors text-sm font-medium">
-              View All
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 appear-animation">
-            {moviePosts.map((post) => (
-              <BlogCard
-                key={post.id}
-                image={post.image}
-                category={post.category}
-                title={post.title}
-                excerpt={post.excerpt}
-                date={post.createdAt}
-                readTime={post.readTime}
-                slug={post.slug}
-              />
-            ))}
+        {/* Clients Section */}
+        <section className="py-16 bg-black border-t border-b border-white/5">
+          <div className="container mx-auto px-4">
+            <h2 className="text-xl font-bold mb-10 text-center">Trusted by leading brands</h2>
+            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16">
+              <img src="/placeholder.svg" alt="Client Logo" className="h-8 opacity-50 hover:opacity-100 transition-opacity" />
+              <img src="/placeholder.svg" alt="Client Logo" className="h-8 opacity-50 hover:opacity-100 transition-opacity" />
+              <img src="/placeholder.svg" alt="Client Logo" className="h-8 opacity-50 hover:opacity-100 transition-opacity" />
+              <img src="/placeholder.svg" alt="Client Logo" className="h-8 opacity-50 hover:opacity-100 transition-opacity" />
+            </div>
           </div>
         </section>
+      </main>
 
-        {/* Technology Section */}
-        <section 
-          ref={addToRefs} 
-          className="container mx-auto px-4 mt-12 opacity-0"
-        >
-          <h2 className="section-title">Technology</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 appear-animation">
-            {technologyPosts.map((post) => (
-              <BlogCard
-                key={post.id}
-                image={post.image}
-                category={post.category}
-                title={post.title}
-                excerpt={post.excerpt}
-                date={post.createdAt}
-                readTime={post.readTime}
-                slug={post.slug}
-              />
-            ))}
+      {/* Footer */}
+      <footer className="bg-black py-16 border-t border-white/5">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-16">
+            <div>
+              <h3 className="text-xl font-bold mb-4">FW</h3>
+              <p className="text-gray-400">Building brands that stand out in a crowded digital landscape.</p>
+            </div>
+            <div>
+              <h4 className="font-bold mb-4">Services</h4>
+              <ul className="space-y-2">
+                <li><Link to="/services" className="text-gray-400 hover:text-white">Branding</Link></li>
+                <li><Link to="/services" className="text-gray-400 hover:text-white">Web Design</Link></li>
+                <li><Link to="/services" className="text-gray-400 hover:text-white">Digital Marketing</Link></li>
+                <li><Link to="/services" className="text-gray-400 hover:text-white">Social Media</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-bold mb-4">Company</h4>
+              <ul className="space-y-2">
+                <li><Link to="/about" className="text-gray-400 hover:text-white">About Us</Link></li>
+                <li><Link to="/work" className="text-gray-400 hover:text-white">Our Work</Link></li>
+                <li><Link to="/blog" className="text-gray-400 hover:text-white">Blog</Link></li>
+                <li><Link to="/contact" className="text-gray-400 hover:text-white">Contact</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-bold mb-4">Connect</h4>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-gray-400 hover:text-white">Twitter</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white">Instagram</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white">LinkedIn</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white">Facebook</a></li>
+              </ul>
+            </div>
           </div>
-        </section>
-
-        {/* More Articles Section - Only show if there are still posts to display */}
-        {recentPosts.slice(3).length > 0 && (
-          <section 
-            ref={addToRefs} 
-            className="container mx-auto px-4 mt-12 mb-16 opacity-0"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="section-title mb-0">More Articles</h2>
-              <Link to="/trending" className="text-blog-green hover:text-blog-accent transition-colors text-sm font-medium">
-                View All
-              </Link>
+          <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center">
+            <p className="text-gray-500 text-sm">© 2023 FW Agency. All rights reserved.</p>
+            <div className="flex space-x-4 mt-4 md:mt-0">
+              <Link to="/privacy-policy" className="text-gray-500 hover:text-white text-sm">Privacy Policy</Link>
+              <Link to="/terms-of-service" className="text-gray-500 hover:text-white text-sm">Terms of Service</Link>
             </div>
-            <div className="grid grid-cols-1 gap-4 appear-animation">
-              {recentPosts.slice(3).map((post) => (
-                <BlogCard
-                  key={post.id}
-                  image={post.image}
-                  category={post.category}
-                  title={post.title}
-                  excerpt={post.excerpt}
-                  date={post.createdAt}
-                  readTime={post.readTime}
-                  slug={post.slug}
-                  layout="horizontal"
-                />
-              ))}
-            </div>
-          </section>
-        )}
-      </div>
-
-      <ScrollToTop />
-    </BlogLayout>
+          </div>
+        </div>
+      </footer>
+    </div>
   );
 };
 

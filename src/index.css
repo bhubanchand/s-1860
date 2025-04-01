@@ -7,7 +7,7 @@
   :root {
     --blog-green: #10b981;
 
-    --background: 0 0% 3.9%;
+    --background: 0 0% 0%;
     --foreground: 0 0% 98%;
     --card: 0 0% 7%;
     --card-foreground: 0 0% 98%;
@@ -46,7 +46,7 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-black text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
@@ -118,11 +118,16 @@
     @apply max-w-full h-auto rounded-lg mb-4;
   }
 
-  /* Custom classes */
+  /* Custom classes for the new design */
+  .text-shadow-sm {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  }
+
   .text-shadow-lg {
     text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
   }
 
+  /* Animations */
   .animate-fade-in {
     animation: fadeIn 0.6s ease-in-out;
   }
@@ -139,40 +144,11 @@
     animation-delay: 200ms;
   }
 
-  .section-title {
-    @apply text-2xl font-bold relative;
+  .delay-300 {
+    animation-delay: 300ms;
   }
 
-  .section-title::after {
-    content: "";
-    @apply absolute left-0 -bottom-2 w-16 h-1 bg-blog-green;
-  }
-
-  /* AMOLED & UI optimizations */
-  .amoled-mode .bg-blog-dark {
-    @apply bg-amoled-black;
-  }
-
-  .amoled-mode .bg-secondary {
-    @apply bg-amoled-dark;
-  }
-
-  .amoled-mode .border-white\/10 {
-    @apply border-amoled-border;
-  }
-
-  /* Hide scrollbar for webkit browsers */
-  .scrollbar-none::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* Hide scrollbar for Firefox */
-  .scrollbar-none {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-
-  /* Animations */
+  /* Keyframes */
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -202,76 +178,18 @@
     }
   }
 
-  .amoled-mode .pulse-glow {
+  .pulse-glow {
     animation: pulseGlow 3s infinite;
   }
 
-  /* Additional styling for HTML content in blog posts */
-  .blog-content-html {
-    @apply text-gray-200 leading-relaxed;
+  /* Hide scrollbar for webkit browsers */
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
   }
 
-  .blog-content-html h1 {
-    @apply text-3xl font-bold mt-8 mb-4;
-  }
-
-  .blog-content-html h2 {
-    @apply text-2xl font-bold mt-8 mb-4;
-  }
-
-  .blog-content-html h3 {
-    @apply text-xl font-bold mt-6 mb-3;
-  }
-
-  .blog-content-html h4 {
-    @apply text-lg font-bold mt-5 mb-2;
-  }
-
-  .blog-content-html p {
-    @apply mb-6;
-  }
-
-  .blog-content-html ul {
-    @apply list-disc pl-6 my-4 space-y-2;
-  }
-
-  .blog-content-html ol {
-    @apply list-decimal pl-6 my-4 space-y-2;
-  }
-
-  .blog-content-html li {
-    @apply text-gray-200;
-  }
-
-  .blog-content-html a {
-    @apply text-blog-green hover:underline;
-  }
-
-  .blog-content-html blockquote {
-    @apply border-l-4 border-blog-green pl-4 italic my-8 text-gray-300;
-  }
-
-  .blog-content-html b, .blog-content-html strong {
-    @apply font-bold;
-  }
-
-  .blog-content-html i, .blog-content-html em {
-    @apply italic;
-  }
-
-  .blog-content-html img {
-    @apply my-6 rounded-lg max-w-full h-auto;
-  }
-
-  .blog-content-html pre {
-    @apply bg-gray-800 p-4 rounded-md my-4 overflow-x-auto;
-  }
-
-  .blog-content-html code {
-    @apply bg-gray-800 px-2 py-1 rounded text-sm;
-  }
-
-  .blog-content-html hr {
-    @apply my-8 border-t border-gray-700;
+  /* Hide scrollbar for Firefox */
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
 }
