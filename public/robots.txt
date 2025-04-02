@@ -1,3 +1,8 @@
+
+User-agent: *
+Allow: /
+
+# Allow all major search engines
 User-agent: Googlebot
 Allow: /
 
@@ -10,5 +15,8 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
-User-agent: *
-Allow: /
+# Sitemap
+Sitemap: https://tonight.blog/sitemap.xml
+
+# Crawl delay for bots (in seconds)
+Crawl-delay: 1

@@ -8,6 +8,7 @@ interface Particle {
   size: number;
   duration: number;
   delay: number;
+  opacity: number;
 }
 
 interface FloatingParticlesProps {
@@ -37,6 +38,7 @@ const FloatingParticles: React.FC<FloatingParticlesProps> = ({
         size: Math.random() * (maxSize - minSize) + minSize,
         duration: Math.random() * 5 + 5, // 5-10 seconds
         delay: Math.random() * 5, // 0-5 seconds delay
+        opacity: Math.random() * 0.5 + 0.2, // 0.2-0.7 opacity
       });
     }
     
@@ -63,17 +65,28 @@ const FloatingParticles: React.FC<FloatingParticlesProps> = ({
       {particles.map((particle) => (
         <div
           key={particle.id}
-          className="particle"
+          className="particle absolute rounded-full bg-white transition-opacity duration-1000"
           style={{
             left: `${particle.x}px`,
             top: `${particle.y}px`,
             width: `${particle.size}px`,
             height: `${particle.size}px`,
-            animationDuration: `${particle.duration}s`,
+            opacity: particle.opacity,
+            animation: `float ${particle.duration}s ease-in-out infinite, pulse ${particle.duration / 2}s ease-in-out infinite`,
             animationDelay: `${particle.delay}s`,
           }}
         />
       ))}
+      <style jsx="true">{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(10deg); }
+        }
+        @keyframes pulse {
+          0%, 100% { opacity: 0.2; }
+          50% { opacity: 0.7; }
+        }
+      `}</style>
     </div>
   );
 };
