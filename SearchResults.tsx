@@ -1,31 +1,34 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import BlogLayout from "@/components/BlogLayout";
 import BlogCard from "@/components/BlogCard";
 import { useBlogStore } from "@/data/posts";
+import { useBlogPosts } from "@/hooks/useBlogPosts";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const SearchResults = () => {
   const [searchParams] = useSearchParams();
   const query = searchParams.get("q") || "";
   const [results, setResults] = useState([]);
-  const getPublishedPosts = useBlogStore((state) => state.getPublishedPosts);
+  const { posts, isLoading } = useBlogPosts();
 
+  // Memoize search results to prevent unnecessary filtering
   useEffect(() => {
-    if (query) {
-      // Use getPublishedPosts to only include posts that should be displayed
-      const publishedPosts = getPublishedPosts();
-      const searchResults = publishedPosts.filter(post => 
-        post.title.toLowerCase().includes(query.toLowerCase()) || 
-        post.content.toLowerCase().includes(query.toLowerCase()) || 
-        post.excerpt.toLowerCase().includes(query.toLowerCase()) ||
-        post.category.toLowerCase().includes(query.toLowerCase())
-      );
-      setResults(searchResults);
-    } else {
+    if (!query) {
       setResults([]);
+      return;
     }
-  }, [query, getPublishedPosts]);
+
+    const searchText = query.toLowerCase();
+    const searchResults = posts.filter(post => 
+      post.title.toLowerCase().includes(searchText) || 
+      post.content.toLowerCase().includes(searchText) || 
+      post.excerpt.toLowerCase().includes(searchText) ||
+      post.category.toLowerCase().includes(searchText)
+    );
+    setResults(searchResults);
+  }, [query, posts]);
 
   return (
     <BlogLayout>
@@ -33,10 +36,26 @@ const SearchResults = () => {
         <div className="container mx-auto px-4">
           <h1 className="text-4xl font-bold mb-4">Search Results</h1>
           <p className="text-muted-foreground mb-10">
-            Found {results.length} results for "{query}"
+            {isLoading ? (
+              <Skeleton className="h-6 w-64" />
+            ) : (
+              `Found ${results.length} results for "${query}"`
+            )}
           </p>
 
-          {results.length > 0 ? (
+          {isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <div key={index} className="space-y-3">
+                  <Skeleton className="h-48 w-full rounded-lg" />
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-6 w-full" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-32" />
+                </div>
+              ))}
+            </div>
+          ) : results.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {results.map((post) => (
                 <BlogCard

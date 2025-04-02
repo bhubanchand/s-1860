@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useBlogStore } from '../data/posts';
 import { toast } from "sonner";
 import { Skeleton } from "./ui/skeleton";
@@ -11,43 +11,64 @@ interface AppWrapperProps {
 const AppWrapper: React.FC<AppWrapperProps> = ({ children }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const fetchPosts = useBlogStore((state) => state.fetchPosts);
+  const blogPosts = useBlogStore((state) => state.blogPosts);
   
-  useEffect(() => {
-    console.log("AppWrapper: Starting data fetch");
-    
-    // Immediately try to load any cached data
-    const cachedData = localStorage.getItem('blog-posts-cache');
-    if (cachedData) {
-      try {
+  // Performance optimization: Check cache status once on mount
+  const hasCachedPosts = useMemo(() => {
+    try {
+      const cachedData = localStorage.getItem('blog-posts-cache');
+      if (cachedData) {
         const { posts, timestamp } = JSON.parse(cachedData);
         const cacheAge = Date.now() - timestamp;
         
-        // Use cache if it's less than 1 hour old
-        if (cacheAge < 60 * 60 * 1000 && Array.isArray(posts) && posts.length > 0) {
-          console.log("AppWrapper: Using cached posts from localStorage");
-          useBlogStore.setState({ blogPosts: posts, loading: false, error: null });
-          setIsLoaded(true);
-        }
-      } catch (e) {
-        console.warn("Failed to load cached posts:", e);
+        return cacheAge < 60 * 60 * 1000 && Array.isArray(posts) && posts.length > 0;
       }
+      return false;
+    } catch (e) {
+      console.warn("Failed to check cached posts:", e);
+      return false;
+    }
+  }, []);
+  
+  useEffect(() => {
+    console.log("AppWrapper: Starting data fetch");
+    let isMounted = true;
+    
+    // Immediately try to use cached data on component mount
+    if (hasCachedPosts || blogPosts.length > 0) {
+      console.log("AppWrapper: Using cached posts");
+      setIsLoaded(true);
+      
+      // Still fetch fresh data in the background
+      fetchPosts({ forceFresh: false }).catch(err => {
+        console.error("Background refresh error:", err);
+      });
+      return;
     }
     
-    // Always fetch fresh data
+    // No cached data, need to fetch
     const loadData = async () => {
       try {
         await fetchPosts({ forceFresh: true });
-        setIsLoaded(true);
-        console.log("AppWrapper: Data loaded successfully");
+        if (isMounted) {
+          setIsLoaded(true);
+          console.log("AppWrapper: Data loaded successfully");
+        }
       } catch (err) {
         console.error("AppWrapper: Error loading data:", err);
-        toast.error("Failed to load content. Please refresh the page.");
-        setIsLoaded(true); // Still set as loaded so the UI renders
+        if (isMounted) {
+          toast.error("Failed to load content. Please refresh the page.");
+          setIsLoaded(true); // Still set as loaded so the UI renders
+        }
       }
     };
 
     loadData();
-  }, [fetchPosts]);
+    
+    return () => {
+      isMounted = false;
+    };
+  }, [fetchPosts, hasCachedPosts, blogPosts.length]);
 
   if (!isLoaded) {
     return (
