@@ -15,6 +15,13 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
+# Image crawlers (for favicon/logo indexing)
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
 # Sitemap
 Sitemap: https://tonight.blog/sitemap.xml
 

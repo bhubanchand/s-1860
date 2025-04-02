@@ -17,7 +17,13 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ message = "Loading..." })
   return (
     <div className={`fixed inset-0 flex items-center justify-center bg-background z-50 transition-opacity duration-500 ${fadeIn ? 'opacity-100' : 'opacity-0'}`}>
       <div className="flex flex-col items-center animate-fade-up">
-        <div className="w-16 h-16 border-4 border-t-white border-opacity-20 rounded-full animate-spin mb-4"></div>
+        <div className="relative w-16 h-16 mb-4">
+          <img
+            src="https://res.cloudinary.com/dyzamqtdw/image/upload/v1743444325/profile_bhuban_tonight_nbupw7.svg"
+            alt="Tonight Blog"
+            className="w-full h-full object-contain animate-pulse"
+          />
+        </div>
         <p className="text-white text-xl font-medium animate-pulse">{message}</p>
       </div>
     </div>
