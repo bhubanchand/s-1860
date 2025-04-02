@@ -1,3 +1,4 @@
+
 import React from "react";
 import BlogLayout from "@/components/BlogLayout";
 
@@ -16,7 +17,7 @@ const TeamMember = ({
     <img src={image} alt={name} className="w-full h-65 object-cover" />
     <div className="p-6">
       <h3 className="text-4xl font-bold mb-1">{name}</h3>
-      <p className="text-blog-green mb-4">{position}</p>
+      <p className="text-white mb-4">{position}</p> {/* Changed from blog-green to white */}
       <p className="text-muted-foreground">{bio}</p>
     </div>
   </div>
@@ -46,7 +47,7 @@ const OurTeam = () => {
         <div className="container mx-auto px-4">
           <h1 className="text-4xl font-bold mb-4 text-center">Our Team</h1>
           <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-16">
-            We’re not just a team—we’re a chaotic mix of caffeine addicts, meme enthusiasts, and creative rebels on a mission. From decoding tech trends to dishing out entertainment with a twist, we keep things fresh, fun, and occasionally unhinged (in the best way possible).
+            We're not just a team—we're a chaotic mix of caffeine addicts, meme enthusiasts, and creative rebels on a mission. From decoding tech trends to dishing out entertainment with a twist, we keep things fresh, fun, and occasionally unhinged (in the best way possible).
           </p>
 
           <div className="flex justify-center gap-5 flex-wrap mx-auto max-w-3xl">

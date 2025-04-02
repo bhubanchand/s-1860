@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -64,11 +63,10 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				blog: {
-					dark: '#000000', // Changed to pure black for AMOLED
-					green: '#4caf50',
-					accent: '#ff5722'
+					dark: '#000000',
+					green: '#ffffff',
+					accent: '#f0f0f0'
 				},
-				// New AMOLED optimized colors
 				amoled: {
 					black: '#000000',
 					dark: '#0A0A0A',

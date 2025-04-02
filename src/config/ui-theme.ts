@@ -1,4 +1,3 @@
-
 /**
  * Central UI/UX configuration file
  * Edit these values to update your site's appearance globally
@@ -8,9 +7,9 @@ export const uiConfig = {
   // Color scheme
   colors: {
     // Primary brand colors
-    primary: "#10b981", // Default green
+    primary: "#ffffff", // Changed from green to pure white
     secondary: "#4b5563",
-    accent: "#ff5722",
+    accent: "#f0f0f0", // Lighter accent
     
     // Text colors
     textPrimary: "#ffffff",
@@ -27,10 +26,10 @@ export const uiConfig = {
     divider: "#222222",
     
     // Status colors
-    success: "#10b981",
+    success: "#ffffff", // Changed from green to white
     error: "#ef4444",
     warning: "#f59e0b",
-    info: "#3b82f6",
+    info: "#ffffff", // Changed from blue to white
   },
   
   // Typography

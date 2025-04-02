@@ -2,15 +2,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-interface BlogCardProps {
+export interface BlogCardProps {
   image: string;
   category: string;
   title: string;
   excerpt: string;
   date: string;
-  authorName?: string; // Changed from readTime to authorName
   slug: string;
-  layout?: "horizontal" | "vertical";
+  authorName?: string;
+  readTime?: string;
+  layout?: "vertical" | "horizontal";
 }
 
 const BlogCard: React.FC<BlogCardProps> = ({
@@ -19,71 +20,54 @@ const BlogCard: React.FC<BlogCardProps> = ({
   title,
   excerpt,
   date,
-  authorName,
   slug,
+  authorName,
+  readTime,
   layout = "vertical",
 }) => {
+  const isHorizontal = layout === "horizontal";
+
   return (
-    <article 
-      className={`blog-card rounded-lg bg-secondary h-full overflow-hidden shadow-sm hover:shadow-md transition-shadow ${
-        layout === "horizontal" ? "grid grid-cols-12 gap-4" : "flex flex-col"
-      } animate-fade-in`}
-    >
-      <div 
-        className={`${
-          layout === "horizontal" ? "col-span-4 md:col-span-5" : "w-full aspect-video"
-        } overflow-hidden`}
-      >
-        <Link to={`/post/${slug}`}>
-          <img
-            src={image}
-            alt={title}
-            className="blog-card-image w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-          />
-        </Link>
+    <div className={`group relative bg-secondary rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:-translate-y-1 ${
+      isHorizontal ? "flex flex-col md:flex-row" : ""
+    }`}>
+      <div className={`overflow-hidden ${isHorizontal ? "md:w-1/3 h-64 md:h-auto" : "h-52"}`}>
+        <img
+          src={image}
+          alt={title}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
       </div>
-      <div 
-        className={`${
-          layout === "horizontal" ? "col-span-8 md:col-span-7 p-3 md:p-4" : "p-4"
-        } flex flex-col h-full`}
-      >
-        <div className="flex items-center justify-between text-xs mb-2">
-          <span className="px-2 py-1 rounded bg-blog-green text-white font-medium">
+      <div className={`p-5 flex flex-col ${isHorizontal ? "md:w-2/3" : ""}`}>
+        <div className="flex justify-between items-center mb-3">
+          <span className="px-2 py-1 text-xs font-medium bg-white text-black rounded">
             {category}
           </span>
-          <div className="text-muted-foreground flex items-center">
-            {date}
+          <span className="text-sm text-gray-400">{date}</span>
+        </div>
+        <Link to={`/post/${slug}`}>
+          <h3 className="text-xl font-bold mb-2 group-hover:text-white transition-colors">
+            {title}
+          </h3>
+        </Link>
+        <p className="text-gray-400 mb-4 line-clamp-2">{excerpt}</p>
+        <div className="mt-auto flex items-center justify-between">
+          <div className="flex items-center space-x-4">
             {authorName && (
-              <>
-                <span className="mx-2">•</span>
-                <span>{authorName}</span>
-              </>
+              <div className="flex items-center space-x-1">
+                <span className="text-sm text-gray-400">By {authorName}</span>
+              </div>
+            )}
+            {readTime && (
+              <div className="text-sm text-gray-400">{readTime} min read</div>
             )}
           </div>
+          <Link to={`/post/${slug}`} className="text-white hover:text-white/80 text-sm font-medium">
+            Read More →
+          </Link>
         </div>
-        <Link to={`/post/${slug}`} className="flex-grow">
-          <h3 className="blog-headline text-lg md:text-xl mb-2 hover:text-blog-green transition-colors">{title}</h3>
-        </Link>
-        <p className="text-muted-foreground text-sm line-clamp-2 mb-3">{excerpt}</p>
-        <Link to={`/post/${slug}`} className="read-more inline-flex items-center mt-auto text-blog-green hover:text-blog-accent transition-colors">
-          Read More
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4 ml-1"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
-        </Link>
       </div>
-    </article>
+    </div>
   );
 };
 
