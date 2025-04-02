@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -31,7 +32,7 @@ const Footer: React.FC = () => {
               <li>
                 <Link
                   to="/category/Entertainment"
-                  className="text-muted-foreground hover:text-blog-green transition-colors"
+                  className="text-muted-foreground hover:text-white transition-colors"
                 >
                   Entertainment
                 </Link>
@@ -39,7 +40,7 @@ const Footer: React.FC = () => {
               <li>
                 <Link
                   to="/category/Technology"
-                  className="text-muted-foreground hover:text-blog-green transition-colors"
+                  className="text-muted-foreground hover:text-white transition-colors"
                 >
                   Technology
                 </Link>
@@ -47,7 +48,7 @@ const Footer: React.FC = () => {
               <li>
                 <Link
                   to="/category/Lifestyle"
-                  className="text-muted-foreground hover:text-blog-green transition-colors"
+                  className="text-muted-foreground hover:text-white transition-colors"
                 >
                   Lifestyle
                 </Link>
@@ -55,7 +56,7 @@ const Footer: React.FC = () => {
               <li>
                 <Link
                   to="/category/Gaming"
-                  className="text-muted-foreground hover:text-blog-green transition-colors"
+                  className="text-muted-foreground hover:text-white transition-colors"
                 >
                   Gaming
                 </Link>
@@ -69,7 +70,7 @@ const Footer: React.FC = () => {
               <li>
                 <Link
                   to="/team"
-                  className="text-muted-foreground hover:text-blog-green transition-colors"
+                  className="text-muted-foreground hover:text-white transition-colors"
                 >
                   Our Team
                 </Link>
@@ -77,7 +78,7 @@ const Footer: React.FC = () => {
               <li>
                 <Link
                   to="/contact"
-                  className="text-muted-foreground hover:text-blog-green transition-colors"
+                  className="text-muted-foreground hover:text-white transition-colors"
                 >
                   Contact Us
                 </Link>
@@ -85,7 +86,7 @@ const Footer: React.FC = () => {
               <li>
                 <Link
                   to="/privacy-policy"
-                  className="text-muted-foreground hover:text-blog-green transition-colors"
+                  className="text-muted-foreground hover:text-white transition-colors"
                 >
                   Privacy Policy
                 </Link>
@@ -93,7 +94,7 @@ const Footer: React.FC = () => {
               <li>
                 <Link
                   to="/terms-of-service"
-                  className="text-muted-foreground hover:text-blog-green transition-colors"
+                  className="text-muted-foreground hover:text-white transition-colors"
                 >
                   Terms of Service
                 </Link>
@@ -112,7 +113,7 @@ const Footer: React.FC = () => {
                 placeholder="Your email"
                 className="px-4 py-2 rounded-l-md bg-muted text-white focus:outline-none"
               />
-              <button className="bg-blog-green hover:bg-green-600 transition-colors px-4 py-2 rounded-r-md text-white font-medium">
+              <button className="bg-white hover:bg-white/80 transition-colors px-4 py-2 rounded-r-md text-black font-medium">
                 Subscribe
               </button>
             </div>
@@ -120,7 +121,7 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="border-t border-muted mt-8 pt-8 text-center text-muted-foreground">
-          <p>© {new Date().getFullYear()} BlogPulse. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Tonight. All rights reserved.</p>
         </div>
       </div>
     </footer>

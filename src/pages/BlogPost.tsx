@@ -52,7 +52,7 @@ const BlogPost = () => {
 
   // Render loading state
   if (loading) {
-    return <LoadingScreen message="Loading article..." />;
+    return <LoadingScreen />;
   }
 
   // If post is still undefined after loading, render nothing (we'll navigate away)
@@ -75,7 +75,7 @@ const BlogPost = () => {
               fetchPriority="high"
             />
             <div className="absolute bottom-0 left-0 p-6 z-20">
-              <span className="inline-block px-3 py-1 text-sm font-semibold rounded bg-blog-green text-white mb-4">
+              <span className="inline-block px-3 py-1 text-sm font-semibold rounded bg-white text-black mb-4">
                 {post.category}
               </span>
               <h1 className="text-3xl md:text-4xl font-bold text-white text-shadow-lg mb-2">
@@ -111,10 +111,10 @@ const BlogPost = () => {
             <div className="mt-8 pt-6 border-t border-muted">
               <div className="flex flex-wrap gap-2">
                 <span className="text-sm text-muted-foreground">Tags:</span>
-                <a href={`/category/${post.category}`} className="px-3 py-1 text-xs bg-muted rounded-full text-muted-foreground hover:bg-blog-green hover:text-white transition-colors">
+                <a href={`/category/${post.category}`} className="px-3 py-1 text-xs bg-white rounded-full text-black hover:bg-white/80 hover:text-black transition-colors">
                   {post.category}
                 </a>
-                <a href="/trending" className="px-3 py-1 text-xs bg-muted rounded-full text-muted-foreground hover:bg-blog-green hover:text-white transition-colors">
+                <a href="/trending" className="px-3 py-1 text-xs bg-muted rounded-full text-muted-foreground hover:bg-white hover:text-black transition-colors">
                   Trending
                 </a>
               </div>
@@ -128,7 +128,7 @@ const BlogPost = () => {
                   href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-full bg-muted hover:bg-blog-green transition-colors"
+                  className="p-2 rounded-full bg-muted hover:bg-white transition-colors"
                   aria-label="Share on Facebook"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -139,7 +139,7 @@ const BlogPost = () => {
                   href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(post.title)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-full bg-muted hover:bg-blog-green transition-colors"
+                  className="p-2 rounded-full bg-muted hover:bg-white transition-colors"
                   aria-label="Share on Twitter"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -150,7 +150,7 @@ const BlogPost = () => {
                   href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(window.location.href)}&title=${encodeURIComponent(post.title)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-full bg-muted hover:bg-blog-green transition-colors"
+                  className="p-2 rounded-full bg-muted hover:bg-white transition-colors"
                   aria-label="Share on LinkedIn"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -162,7 +162,7 @@ const BlogPost = () => {
                     navigator.clipboard.writeText(window.location.href);
                     toast.success("Link copied to clipboard!");
                   }}
-                  className="p-2 rounded-full bg-muted hover:bg-blog-green transition-colors"
+                  className="p-2 rounded-full bg-muted hover:bg-white transition-colors"
                   aria-label="Copy link"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
