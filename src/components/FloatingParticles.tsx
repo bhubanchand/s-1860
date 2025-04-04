@@ -1,92 +1,114 @@
 
-import React, { useEffect, useState } from 'react';
-
-interface Particle {
-  id: number;
-  x: number;
-  y: number;
-  size: number;
-  duration: number;
-  delay: number;
-  opacity: number;
-}
+import React, { useEffect, useRef, useState } from "react";
 
 interface FloatingParticlesProps {
   count?: number;
-  maxSize?: number;
+  color?: string;
   minSize?: number;
+  maxSize?: number;
+  minSpeed?: number;
+  maxSpeed?: number;
+  className?: string;
 }
 
 const FloatingParticles: React.FC<FloatingParticlesProps> = ({
-  count = 50,
-  maxSize = 6,
+  count = 25,
+  color = "rgba(255, 255, 255, 0.2)",
   minSize = 2,
+  maxSize = 5,
+  minSpeed = 0.5,
+  maxSpeed = 1.5,
+  className = "",
 }) => {
-  const [particles, setParticles] = useState<Particle[]>([]);
-  
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
   useEffect(() => {
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight * 2; // Make particles cover the entire page height
-    
-    const newParticles: Particle[] = [];
-    
+    if (!canvasRef.current) return;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const updateDimensions = () => {
+      if (canvas.parentElement) {
+        const { width, height } = canvas.parentElement.getBoundingClientRect();
+        canvas.width = width;
+        canvas.height = height;
+        setDimensions({ width, height });
+      }
+    };
+
+    // Initial dimensions
+    updateDimensions();
+
+    // Resize listener
+    window.addEventListener("resize", updateDimensions);
+
+    // Create particles
+    const particles: {
+      x: number;
+      y: number;
+      size: number;
+      speedX: number;
+      speedY: number;
+    }[] = [];
+
     for (let i = 0; i < count; i++) {
-      newParticles.push({
-        id: i,
-        x: Math.random() * windowWidth,
-        y: Math.random() * windowHeight,
-        size: Math.random() * (maxSize - minSize) + minSize,
-        duration: Math.random() * 5 + 5, // 5-10 seconds
-        delay: Math.random() * 5, // 0-5 seconds delay
-        opacity: Math.random() * 0.5 + 0.2, // 0.2-0.7 opacity
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: minSize + Math.random() * (maxSize - minSize),
+        speedX: (minSpeed + Math.random() * (maxSpeed - minSpeed)) * (Math.random() > 0.5 ? 1 : -1),
+        speedY: (minSpeed + Math.random() * (maxSpeed - minSpeed)) * (Math.random() > 0.5 ? 1 : -1),
       });
     }
-    
-    setParticles(newParticles);
-    
-    // Handle resize
-    const handleResize = () => {
-      setParticles(prev => prev.map(particle => ({
-        ...particle,
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * (window.innerHeight * 2),
-      })));
+
+    // Animation loop
+    let animationFrameId: number;
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach((particle) => {
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Update position
+        particle.x += particle.speedX;
+        particle.y += particle.speedY;
+
+        // Boundary checking
+        if (particle.x < 0 || particle.x > canvas.width) particle.speedX *= -1;
+        if (particle.y < 0 || particle.y > canvas.height) particle.speedY *= -1;
+      });
+
+      animationFrameId = requestAnimationFrame(animate);
     };
-    
-    window.addEventListener('resize', handleResize);
-    
+
+    animate();
+
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", updateDimensions);
+      cancelAnimationFrame(animationFrameId);
     };
-  }, [count, maxSize, minSize]);
-  
+  }, [count, color, minSize, maxSize, minSpeed, maxSpeed]);
+
   return (
-    <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
-      {particles.map((particle) => (
-        <div
-          key={particle.id}
-          className="particle absolute rounded-full bg-white transition-opacity duration-1000"
-          style={{
-            left: `${particle.x}px`,
-            top: `${particle.y}px`,
-            width: `${particle.size}px`,
-            height: `${particle.size}px`,
-            opacity: particle.opacity,
-            animation: `float ${particle.duration}s ease-in-out infinite, pulse ${particle.duration / 2}s ease-in-out infinite`,
-            animationDelay: `${particle.delay}s`,
-          }}
-        />
-      ))}
+    <div className={`absolute inset-0 overflow-hidden pointer-events-none ${className}`}>
+      <canvas
+        ref={canvasRef}
+        className="w-full h-full absolute top-0 left-0 z-0"
+      />
       <style>
         {`
-        @keyframes float {
-          0%, 100% { transform: translateY(0) rotate(0deg); }
-          50% { transform: translateY(-20px) rotate(10deg); }
-        }
-        @keyframes pulse {
-          0%, 100% { opacity: 0.2; }
-          50% { opacity: 0.7; }
-        }
+          @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+          }
         `}
       </style>
     </div>

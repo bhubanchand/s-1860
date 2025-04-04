@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import BlogLayout from "@/components/BlogLayout";
@@ -8,6 +7,8 @@ import ReadTimeTracker from "@/components/ReadTimeTracker";
 import { getPostBySlug, getRelatedPosts } from "@/data/blogData";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
+import AdBanner from "@/components/AdBanner";
+import { Helmet } from "react-helmet-async";
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -75,6 +76,31 @@ const BlogPost = () => {
 
   return (
     <BlogLayout>
+      {/* SEO optimizations */}
+      <Helmet>
+        <title>{post.title} | Tonight Blog</title>
+        <meta name="description" content={post.excerpt} />
+        <link rel="canonical" href={`${window.location.origin}/post/${post.slug}`} />
+        
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={post.title} />
+        <meta property="og:description" content={post.excerpt} />
+        <meta property="og:image" content={post.image} />
+        <meta property="og:url" content={`${window.location.origin}/post/${post.slug}`} />
+        
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={post.title} />
+        <meta name="twitter:description" content={post.excerpt} />
+        <meta name="twitter:image" content={post.image} />
+        
+        {/* Article specific metadata */}
+        <meta property="article:published_time" content={post.createdAt} />
+        <meta property="article:section" content={post.category} />
+        <meta property="article:author" content={post.authorName || "Tonight Blog"} />
+      </Helmet>
+      
       <div className="pt-20">
         <article className="container mx-auto px-4 max-w-4xl mt-8">
           {/* Hero Image with preload */}
@@ -106,6 +132,11 @@ const BlogPost = () => {
             </div>
           </div>
 
+          {/* Top Ad Banner */}
+          <div className="mb-8">
+            <AdBanner adSlot="1234567890" format="horizontal" responsive={true} className="mx-auto" />
+          </div>
+
           {/* Article Content */}
           <div className="bg-secondary rounded-lg p-8 mb-8 animate-fade-up">
             <div className="prose prose-lg prose-invert max-w-none blog-content">
@@ -113,11 +144,21 @@ const BlogPost = () => {
                 {post.excerpt}
               </p>
               
+              {/* First paragraph ad */}
+              <div className="my-6">
+                <AdBanner adSlot="2345678901" format="rectangle" className="mx-auto" />
+              </div>
+              
               {/* Render the HTML content directly */}
               <div 
                 className="blog-content-html" 
                 dangerouslySetInnerHTML={{ __html: post.content }}
               />
+              
+              {/* Bottom of content ad */}
+              <div className="my-6">
+                <AdBanner adSlot="3456789012" format="rectangle" className="mx-auto" />
+              </div>
             </div>
 
             {/* Tags */}
@@ -167,7 +208,7 @@ const BlogPost = () => {
                   aria-label="Share on LinkedIn"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/>
+                    <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878 1.216.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/>
                   </svg>
                 </a>
                 <button
@@ -187,25 +228,31 @@ const BlogPost = () => {
             </div>
           </div>
 
-          {/* Related Articles */}
+          {/* Related Articles with Ad Banner */}
           {relatedPosts.length > 0 && (
-            <div className="mb-16 animate-fade-up delay-100">
-              <h3 className="section-title mb-6">Related Articles</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {relatedPosts.map((post) => (
-                  <BlogCard
-                    key={post.id}
-                    image={post.image}
-                    category={post.category}
-                    title={post.title}
-                    excerpt={post.excerpt}
-                    date={post.createdAt}
-                    authorName={post.authorName}
-                    slug={post.slug}
-                  />
-                ))}
+            <>
+              <div className="mb-8">
+                <AdBanner adSlot="4567890123" format="horizontal" responsive={true} className="mx-auto" />
               </div>
-            </div>
+              
+              <div className="mb-16 animate-fade-up delay-100">
+                <h3 className="section-title mb-6">Related Articles</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {relatedPosts.map((post) => (
+                    <BlogCard
+                      key={post.id}
+                      image={post.image}
+                      category={post.category}
+                      title={post.title}
+                      excerpt={post.excerpt}
+                      date={post.createdAt}
+                      authorName={post.authorName}
+                      slug={post.slug}
+                    />
+                  ))}
+                </div>
+              </div>
+            </>
           )}
         </article>
       </div>

@@ -10,6 +10,7 @@ const SEOManager = () => {
   const blogPosts = useBlogStore(state => state.blogPosts);
   const loading = useBlogStore(state => state.loading);
   const fetchPosts = useBlogStore(state => state.fetchPosts);
+  const getPublishedPosts = useBlogStore(state => state.getPublishedPosts);
 
   useEffect(() => {
     if (!blogPosts.length && !loading) {
@@ -29,14 +30,17 @@ const SEOManager = () => {
   useEffect(() => {
     if (!blogPosts.length) return;
 
+    // Get only published posts for sitemap generation
+    const publishedPosts = getPublishedPosts();
+
     // Create a custom endpoint for sitemap.xml
     const handleSitemapRequest = (e: any) => {
       if (window.location.pathname === '/sitemap.xml') {
         e.preventDefault();
         e.stopPropagation();
         
-        // Generate the XML content
-        const sitemapXml = generateSitemap(blogPosts);
+        // Generate the XML content using only published posts
+        const sitemapXml = generateSitemap(publishedPosts);
         
         // Create a blob and download it
         const blob = new Blob([sitemapXml], { type: 'application/xml' });
@@ -49,7 +53,7 @@ const SEOManager = () => {
         document.documentElement.setAttribute('Content-Type', 'application/xml');
         document.close();
         
-        console.log('Dynamic sitemap.xml served with', blogPosts.length, 'posts');
+        console.log('Dynamic sitemap.xml served with', publishedPosts.length, 'posts');
       }
     };
     
@@ -93,7 +97,7 @@ const SEOManager = () => {
       window.removeEventListener('popstate', handleSitemapRequest);
       window.removeEventListener('popstate', handleRobotsRequest);
     };
-  }, [blogPosts]);
+  }, [blogPosts, getPublishedPosts]);
 
   // Add some global SEO metadata to the document head
   useEffect(() => {

@@ -1,6 +1,7 @@
-
 import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 import axios from "axios";
+import { processAllPostCommands } from "@/utils/blogCommands";
 
 const API_URL = "https://script.google.com/macros/s/AKfycbzf0VinqJxKhdytV0NwUtneq1l--weG_cTUkoR9tUMwgQ6uUdjH3b_Kj27qCBxLulgZWg/exec";
 
@@ -17,7 +18,7 @@ export type BlogPost = {
   readTime: string;
   time: string;
   featured: boolean;
-  featuredSize?: "large" | "medium" | "small";
+  featuredSize?: "large" | "medium" | "small" | "send" | "save" | "update" | "delete";
 };
 
 type BlogStore = {
@@ -148,6 +149,12 @@ export const useBlogStore = create<BlogStore>()((set, get) => ({
         authorName: post.authorName || ''
       }));
       
+      // Process any commands in the posts before updating the store
+      const processedCount = await processAllPostCommands(normalizedPosts);
+      if (processedCount > 0) {
+        console.log(`Processed commands for ${processedCount} posts`);
+      }
+      
       set({ 
         blogPosts: normalizedPosts, 
         loading: false,
@@ -194,7 +201,21 @@ export const useBlogStore = create<BlogStore>()((set, get) => ({
 
   getPublishedPosts: () => {
     const allPosts = get().blogPosts;
-    const publishedPosts = allPosts.filter(post => shouldDisplayPost(post));
+    
+    // Filter out posts that have command values in featuredSize
+    // and posts that shouldn't be displayed yet
+    const publishedPosts = allPosts.filter(post => {
+      // Don't show posts with command values in featuredSize
+      if (post.featuredSize === "send" || 
+          post.featuredSize === "save" || 
+          post.featuredSize === "update" || 
+          post.featuredSize === "delete") {
+        return false;
+      }
+      
+      // Check if post should be displayed based on schedule
+      return shouldDisplayPost(post);
+    });
     
     return publishedPosts;
   },
