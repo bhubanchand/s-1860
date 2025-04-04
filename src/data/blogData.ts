@@ -51,6 +51,19 @@ export const sortByDate = (posts: BlogPost[]): BlogPost[] => {
   });
 };
 
+// Export the blog posts for services to use - empty array by default
+export const blogPosts: BlogPost[] = [];
+
+// Get all posts including scheduled ones
+export const getAllPostsIncludingScheduled = (): BlogPost[] => {
+  return useBlogStore.getState().blogPosts;
+};
+
+// Sort blog posts (utility for services)
+export const sortBlogPosts = (posts: BlogPost[]): BlogPost[] => {
+  return sortByDate(posts.filter(post => shouldDisplayPost(post)));
+};
+
 // Get featured posts
 export const getFeaturedPosts = (forceFresh: boolean = false): BlogPost[] => {
   const posts = getPublishedPosts(forceFresh);
