@@ -10,10 +10,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { useBlogStore } from "./data/posts";
 import SEOManager from "./components/SEOManager";
 import { HelmetProvider } from "react-helmet-async";
-import BlogProvider from "./BlogProvider";
 
-// Lazy load pages with consistent casing
-const Index = lazy(() => import("./pages/Index"));
+// Lazy load pages - Fix the casing to match the actual file name
+const Index = lazy(() => import("./pages/index"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const OurTeam = lazy(() => import("./pages/OurTeam"));
@@ -66,7 +65,6 @@ const App = () => (
           <ScrollToTopOnNavigation />
           <DataRefresher />
           <SEOManager />
-          <BlogProvider />
           <Routes>
             <Route
               path="/"

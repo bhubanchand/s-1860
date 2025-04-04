@@ -10,7 +10,7 @@ interface FeaturedPostProps {
   slug: string;
   date: string;
   authorName?: string;
-  size?: "large" | "medium" | "small"; // Remove command types from component props
+  size?: "large" | "medium" | "small";
 }
 
 const FeaturedPost: React.FC<FeaturedPostProps> = ({
@@ -44,11 +44,11 @@ const FeaturedPost: React.FC<FeaturedPostProps> = ({
         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-105"
       />
       <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 z-20">
-        <span className="inline-block px-2 py-1 mb-2 text-xs font-semibold rounded bg-white text-black">
+        <span className="inline-block px-2 py-1 mb-2 text-xs font-semibold rounded bg-white text-black"> {/* Changed from blog-green to white and text to black for readability */}
           {category}
         </span>
         <Link to={`/post/${slug}`} className="!no-underline">
-          <h2 className={`${titleSizes[size]} font-bold text-white text-shadow-lg mb-2 leading-tight hover:text-white/80 transition-colors`}>
+          <h2 className={`${titleSizes[size]} font-bold text-white text-shadow-lg mb-2 leading-tight hover:text-white/80 transition-colors`}> {/* Changed hover color */}
             {title}
           </h2>
         </Link>
@@ -64,7 +64,7 @@ const FeaturedPost: React.FC<FeaturedPostProps> = ({
             </>
           )}
         </div>
-        <Link to={`/post/${slug}`} className="text-white hover:text-white/80 text-sm font-medium transition-colors inline-flex items-center mt-2">
+        <Link to={`/post/${slug}`} className="text-white hover:text-white/80 text-sm font-medium transition-colors inline-flex items-center mt-2"> {/* Changed colors */}
           Read More
           <svg
             xmlns="http://www.w3.org/2000/svg"

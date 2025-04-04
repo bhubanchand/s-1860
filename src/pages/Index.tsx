@@ -1,10 +1,11 @@
+
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import BlogLayout from "@/components/BlogLayout";
 import FeaturedPost from "@/components/FeaturedPost";
 import BlogCard from "@/components/BlogCard";
 import ScrollToTop from "@/components/ScrollToTop";
-import { getFeaturedPosts, getPostsByCategory, getRecentPosts } from "@/data/blogData";
+import { getFeaturedPosts, getPostsByCategory, getRecentPosts} from "@/data/blogData";
 import { toast } from "sonner";
 
 const Index = () => {
@@ -114,7 +115,7 @@ const Index = () => {
                 slug={post.slug}
                 date={post.createdAt}
                 authorName={post.authorName}
-                size={post.featuredSize as "large" | "medium" | "small"}
+                size={post.featuredSize}
               />
             ))}
           </div>

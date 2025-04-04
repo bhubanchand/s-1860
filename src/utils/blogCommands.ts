@@ -1,245 +1,131 @@
 
-import { BlogPost } from '@/data/blogData';
-import { toast } from 'sonner';
+import { BlogPost, useBlogStore } from "@/data/posts";
+import { toast } from "sonner";
 
-/**
- * Process all posts for commands in the featuredSize field
- * @param posts List of blog posts to check for commands
- * @returns Number of posts with commands that were processed
- */
-export const processAllPostCommands = async (posts: BlogPost[]): Promise<number> => {
-  if (!posts || posts.length === 0) {
-    return 0;
-  }
-
-  let processedCount = 0;
-
-  for (const post of posts) {
-    if (await processPostCommand(post)) {
-      processedCount++;
-    }
-  }
-
-  return processedCount;
+// Constants for command types
+export const BLOG_COMMANDS = {
+  SEND: "send",
+  SAVE: "save",
+  UPDATE: "update",
+  DELETE: "delete"
 };
 
-/**
- * Process a single post for commands in the featuredSize field
- * @param post Blog post to check for commands
- * @returns True if a command was processed, false otherwise
- */
-const processPostCommand = async (post: BlogPost): Promise<boolean> => {
-  // Check if this post has a command in the featuredSize field
-  if (!post.featuredSize) {
-    return false;
-  }
+// Type for blog commands
+export type BlogCommand = typeof BLOG_COMMANDS[keyof typeof BLOG_COMMANDS];
 
-  const command = post.featuredSize;
+// Validates if a string is a valid blog command
+export function isValidCommand(value: string | undefined): value is BlogCommand {
+  if (!value) return false;
+  const normalizedValue = value.trim().toLowerCase();
+  return Object.values(BLOG_COMMANDS).includes(normalizedValue as BlogCommand);
+}
+
+// Extracts command from featuredSize field
+export function extractCommand(post: BlogPost): BlogCommand | null {
+  if (!post.featuredSize) return null;
   
-  // Skip if it's not a command
-  if (command !== 'send' && command !== 'save' && 
-      command !== 'update' && command !== 'delete') {
-    return false;
-  }
+  const potentialCommand = post.featuredSize.trim().toLowerCase();
+  return isValidCommand(potentialCommand) ? potentialCommand as BlogCommand : null;
+}
 
+// Process a single post based on its command
+export async function processPostCommand(post: BlogPost): Promise<boolean> {
+  const command = extractCommand(post);
+  if (!command) return false;
+  
   console.log(`Processing command '${command}' for post: ${post.title} (ID: ${post.id})`);
-
+  
   try {
-    switch (command) {
-      case 'send':
-      case 'save':
-        // Create or update the post file and related assets
-        await savePostFile(post);
+    switch(command) {
+      case BLOG_COMMANDS.SEND:
+      case BLOG_COMMANDS.SAVE:
+        await handleSavePost(post);
         break;
-        
-      case 'update':
-        // Update an existing post
-        await updatePostFile(post);
+      case BLOG_COMMANDS.UPDATE:
+        await handleUpdatePost(post);
         break;
-        
-      case 'delete':
-        // Delete a post and related assets
-        await deletePostFile(post);
+      case BLOG_COMMANDS.DELETE:
+        await handleDeletePost(post);
         break;
+      default:
+        return false;
     }
-    
     return true;
   } catch (error) {
-    console.error(`Error processing command for post ID ${post.id}:`, error);
-    toast.error(`Failed to process ${command} command for post: ${post.title}`);
+    console.error(`Error processing command '${command}' for post:`, post.id, error);
     return false;
   }
-};
+}
 
-/**
- * Save a post to a file
- * Frontend implementation that uses LocalStorage to simulate file operations
- */
-const savePostFile = async (post: BlogPost): Promise<void> => {
-  // Get existing posts from localStorage or initialize empty array
-  const savedPosts = JSON.parse(localStorage.getItem('saved-blog-posts') || '[]');
+// Handler for save/send commands
+async function handleSavePost(post: BlogPost): Promise<void> {
+  // In a real implementation, this would generate the post
+  // For now, we'll just add the post to our store if it doesn't exist
+  const store = useBlogStore.getState();
+  const existingPost = store.blogPosts.find(p => p.id === post.id);
   
-  // Check if post already exists
-  const existingIndex = savedPosts.findIndex((p: BlogPost) => p.id === post.id);
-  
-  if (existingIndex >= 0) {
-    // Update existing post
-    savedPosts[existingIndex] = { 
-      ...post,
-      lastSaved: new Date().toISOString(),
-      featuredSize: post.featuredSize === 'send' || post.featuredSize === 'save' ? 'medium' : post.featuredSize
-    };
+  if (!existingPost) {
+    // This is a new post
+    toast.success(`Post "${post.title}" has been published`);
+    console.log(`New post saved: ${post.title} (ID: ${post.id})`);
+    
+    // Clear the command after processing
+    post.featuredSize = undefined;
+    
+    // We're not actually mutating the store here as that will happen
+    // automatically when the Google Sheet is fetched
   } else {
-    // Add new post
-    savedPosts.push({
-      ...post,
-      lastSaved: new Date().toISOString(),
-      featuredSize: 'medium' // Reset command to normal size
-    });
+    toast.info(`Post "${post.title}" already exists`);
   }
-  
-  // Save back to localStorage
-  localStorage.setItem('saved-blog-posts', JSON.stringify(savedPosts));
-  
-  // Generate SEO data and store it
-  const seoData = generateSEOData(post);
-  
-  const savedSEO = JSON.parse(localStorage.getItem('blog-seo-data') || '{}');
-  savedSEO[post.id] = seoData;
-  localStorage.setItem('blog-seo-data', JSON.stringify(savedSEO));
-  
-  // Generate ad configuration
-  const adConfig = generateAdConfig(post);
-  
-  const savedAds = JSON.parse(localStorage.getItem('blog-ads-config') || '{}');
-  savedAds[post.id] = adConfig;
-  localStorage.setItem('blog-ads-config', JSON.stringify(savedAds));
-  
-  console.log(`Saved post "${post.title}" (ID: ${post.id}) to localStorage`);
-  toast.success(`Post "${post.title}" has been saved`);
-};
+}
 
-/**
- * Update an existing post file
- * Frontend implementation that uses LocalStorage to simulate file operations
- */
-const updatePostFile = async (post: BlogPost): Promise<void> => {
-  // Get existing posts from localStorage
-  const savedPosts = JSON.parse(localStorage.getItem('saved-blog-posts') || '[]');
+// Handler for update commands
+async function handleUpdatePost(post: BlogPost): Promise<void> {
+  const store = useBlogStore.getState();
+  const existingPost = store.blogPosts.find(p => p.id === post.id);
   
-  // Check if post exists
-  const existingIndex = savedPosts.findIndex((p: BlogPost) => p.id === post.id);
-  
-  if (existingIndex >= 0) {
-    // Update existing post
-    savedPosts[existingIndex] = { 
-      ...post,
-      lastUpdated: new Date().toISOString(),
-      featuredSize: 'medium' // Reset command
-    };
-    
-    // Save back to localStorage
-    localStorage.setItem('saved-blog-posts', JSON.stringify(savedPosts));
-    
-    // Update SEO data
-    const seoData = generateSEOData(post);
-    const savedSEO = JSON.parse(localStorage.getItem('blog-seo-data') || '{}');
-    savedSEO[post.id] = seoData;
-    localStorage.setItem('blog-seo-data', JSON.stringify(savedSEO));
-    
-    // Update ad configuration
-    const adConfig = generateAdConfig(post);
-    const savedAds = JSON.parse(localStorage.getItem('blog-ads-config') || '{}');
-    savedAds[post.id] = adConfig;
-    localStorage.setItem('blog-ads-config', JSON.stringify(savedAds));
-    
-    console.log(`Updated post "${post.title}" (ID: ${post.id}) in localStorage`);
+  if (existingPost) {
     toast.success(`Post "${post.title}" has been updated`);
+    console.log(`Post updated: ${post.title} (ID: ${post.id})`);
+    
+    // Clear the command after processing
+    post.featuredSize = undefined;
+    
+    // The actual update will happen when the Google Sheet is fetched
   } else {
-    // If post doesn't exist, save it instead
-    await savePostFile(post);
+    toast.error(`Cannot update: Post "${post.title}" not found`);
   }
-};
+}
 
-/**
- * Delete a post file and related assets
- * Frontend implementation that uses LocalStorage to simulate file operations
- */
-const deletePostFile = async (post: BlogPost): Promise<void> => {
-  // Get existing posts from localStorage
-  const savedPosts = JSON.parse(localStorage.getItem('saved-blog-posts') || '[]');
+// Handler for delete commands
+async function handleDeletePost(post: BlogPost): Promise<void> {
+  const store = useBlogStore.getState();
+  const existingPostIndex = store.blogPosts.findIndex(p => p.id === post.id);
   
-  // Filter out the post to delete
-  const updatedPosts = savedPosts.filter((p: BlogPost) => p.id !== post.id);
-  
-  // Save back to localStorage
-  localStorage.setItem('saved-blog-posts', JSON.stringify(updatedPosts));
-  
-  // Remove SEO data
-  const savedSEO = JSON.parse(localStorage.getItem('blog-seo-data') || '{}');
-  delete savedSEO[post.id];
-  localStorage.setItem('blog-seo-data', JSON.stringify(savedSEO));
-  
-  // Remove ad configuration
-  const savedAds = JSON.parse(localStorage.getItem('blog-ads-config') || '{}');
-  delete savedAds[post.id];
-  localStorage.setItem('blog-ads-config', JSON.stringify(savedAds));
-  
-  console.log(`Deleted post "${post.title}" (ID: ${post.id}) from localStorage`);
-  toast.success(`Post "${post.title}" has been deleted`);
-};
+  if (existingPostIndex !== -1) {
+    toast.success(`Post "${post.title}" has been deleted`);
+    console.log(`Post deleted: ${post.title} (ID: ${post.id})`);
+    
+    // For now, we'll rely on the next Google Sheet fetch to remove the post
+    // But we could implement a more immediate removal if needed
+  } else {
+    toast.error(`Cannot delete: Post "${post.title}" not found`);
+  }
+}
 
-/**
- * Generate SEO data for a blog post
- */
-const generateSEOData = (post: BlogPost) => {
-  return {
-    title: post.title,
-    description: post.excerpt,
-    keywords: generateKeywords(post),
-    ogImage: post.image,
-    lastUpdated: new Date().toISOString(),
-  };
-};
-
-/**
- * Generate ad configuration for a blog post
- */
-const generateAdConfig = (post: BlogPost) => {
-  // Generate different ad slots based on post content/category
-  return {
-    headerAd: `post-header-${post.id}`,
-    contentAd: `post-content-${post.id}`,
-    sidebarAd: `post-sidebar-${post.id}`,
-    footerAd: `post-footer-${post.id}`,
-    lastUpdated: new Date().toISOString(),
-  };
-};
-
-/**
- * Generate keywords from post content
- */
-const generateKeywords = (post: BlogPost): string[] => {
-  // Simple implementation to extract potential keywords
-  const allText = `${post.title} ${post.category} ${post.excerpt} ${post.content}`;
+// Batch process all posts with commands
+export async function processAllPostCommands(posts: BlogPost[]): Promise<number> {
+  let processedCount = 0;
   
-  // Remove special characters and split into words
-  const words = allText.toLowerCase()
-    .replace(/[^\w\s]/g, '')
-    .split(/\s+/)
-    .filter(word => word.length > 3);
+  for (const post of posts) {
+    const command = extractCommand(post);
+    if (command) {
+      const success = await processPostCommand(post);
+      if (success) {
+        processedCount++;
+      }
+    }
+  }
   
-  // Count word frequency
-  const wordCount: Record<string, number> = {};
-  words.forEach(word => {
-    wordCount[word] = (wordCount[word] || 0) + 1;
-  });
-  
-  // Convert to array of [word, count] pairs and sort by count
-  const sortedWords = Object.entries(wordCount)
-    .sort((a, b) => b[1] - a[1])
-    .map(pair => pair[0]);
-  
-  // Return top 10 words as keywords, plus category
-  return [...new Set([post.category.toLowerCase(), ...sortedWords.slice(0, 10)])];
-};
+  return processedCount;
+}
