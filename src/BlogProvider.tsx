@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useBlogStore } from "./data/posts";
 import LoadingScreen from "@/components/LoadingScreen";
 import { toast } from "sonner";
-import { processAllPostCommands } from "@/utils/blogCommands";
 
 const BlogProvider = () => {
   const fetchPosts = useBlogStore((state) => state.fetchPosts);
@@ -12,7 +11,6 @@ const BlogProvider = () => {
   const error = useBlogStore((state) => state.error);
   const [progress, setProgress] = useState(0);
   const [initialFetchDone, setInitialFetchDone] = useState(false);
-  const blogPosts = useBlogStore((state) => state.blogPosts);
 
   useEffect(() => {
     console.log("BlogProvider mounted");
@@ -50,26 +48,11 @@ const BlogProvider = () => {
     // Set up auto-fetch interval
     const stopAutoFetch = startAutoFetch();
     
-    // Set up a separate interval to check for commands
-    const commandCheckInterval = setInterval(async () => {
-      if (blogPosts.length > 0) {
-        console.log("Checking for blog post commands...");
-        const processedCount = await processAllPostCommands(blogPosts);
-        
-        if (processedCount > 0) {
-          console.log(`Processed ${processedCount} commands, refreshing data...`);
-          // Refresh the data to get the latest changes
-          fetchPosts({ forceFresh: true });
-        }
-      }
-    }, 60000); // Check every minute
-    
     // Clean up on unmount
     return () => {
       stopAutoFetch();
-      clearInterval(commandCheckInterval);
     };
-  }, [fetchPosts, startAutoFetch, blogPosts]);
+  }, [fetchPosts, startAutoFetch]);
 
   // Show loading screen during initial load
   if (loading && !initialFetchDone && progress < 100) {
