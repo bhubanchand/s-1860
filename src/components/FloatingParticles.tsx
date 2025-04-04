@@ -77,7 +77,8 @@ const FloatingParticles: React.FC<FloatingParticlesProps> = ({
           }}
         />
       ))}
-      <style jsx="true">{`
+      <style>
+        {`
         @keyframes float {
           0%, 100% { transform: translateY(0) rotate(0deg); }
           50% { transform: translateY(-20px) rotate(10deg); }
@@ -86,7 +87,8 @@ const FloatingParticles: React.FC<FloatingParticlesProps> = ({
           0%, 100% { opacity: 0.2; }
           50% { opacity: 0.7; }
         }
-      `}</style>
+        `}
+      </style>
     </div>
   );
 };

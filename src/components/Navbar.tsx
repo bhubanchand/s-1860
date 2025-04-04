@@ -12,8 +12,13 @@ const Navbar = () => {
       <div className="blog-container">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
-            <Link to="/" className="text-2xl font-bold text-blog-primary">
-              Quill Oasis
+            <Link to="/" className="flex items-center space-x-2">
+              <img 
+                src="https://res.cloudinary.com/dyzamqtdw/image/upload/v1743554489/logo_llf3w4.svg" 
+                alt="Tonight Logo" 
+                className="w-8 h-8" 
+              />
+              <span className="font-mono font-bold text-blog-primary">tonight</span>
             </Link>
           </div>
 

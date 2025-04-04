@@ -9,7 +9,14 @@ const Header = () => {
     <header className="border-b sticky top-0 bg-white bg-opacity-95 backdrop-blur-sm z-10">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <div className="flex items-center gap-8">
-          <Link to="/" className="text-2xl font-serif font-bold">Serene</Link>
+          <Link to="/" className="flex items-center space-x-2">
+            <img 
+              src="https://res.cloudinary.com/dyzamqtdw/image/upload/v1743554489/logo_llf3w4.svg" 
+              alt="Tonight Logo" 
+              className="w-8 h-8" 
+            />
+            <span className="font-mono font-bold text-2xl">tonight</span>
+          </Link>
           <nav className="hidden md:flex items-center space-x-6">
             <Link to="/category/technology" className="text-gray-600 hover:text-gray-900 transition duration-200">Technology</Link>
             <Link to="/category/design" className="text-gray-600 hover:text-gray-900 transition duration-200">Design</Link>

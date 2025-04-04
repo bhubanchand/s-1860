@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, Search } from "lucide-react";
@@ -42,42 +43,45 @@ const Navigation: React.FC = () => {
         <div className="flex items-center justify-between">
           <Link
             to="/"
-            className="flex items-center space-x-2 text-2xl font-bold text-white"
+            className="flex items-center space-x-2 text-2xl font-bold text-white !no-underline"
           >
-            <img src="/favicon.ico" alt="Tonight Logo" className="w-8 h-8" />
+            <img 
+              src="https://res.cloudinary.com/dyzamqtdw/image/upload/v1743554489/logo_llf3w4.svg" 
+              alt="Tonight Logo" 
+              className="w-8 h-8" 
+            />
             <span className="font-mono font-bold">tonight</span>
-
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <Link
               to="/"
-              className="text-white hover:text-blog-green transition-colors"
+              className="text-white hover:text-blog-green transition-colors !no-underline"
             >
               Home
             </Link>
             <Link
               to="/category/Entertainment"
-              className="text-white hover:text-blog-green transition-colors"
+              className="text-white hover:text-blog-green transition-colors !no-underline"
             >
               Entertainment
             </Link>
             <Link
               to="/category/Technology"
-              className="text-white hover:text-blog-green transition-colors"
+              className="text-white hover:text-blog-green transition-colors !no-underline"
             >
               Technology
             </Link>
             <Link
               to="/category/Lifestyle"
-              className="text-white hover:text-blog-green transition-colors"
+              className="text-white hover:text-blog-green transition-colors !no-underline"
             >
               Lifestyle
             </Link>
             <Link
               to="/category/Gaming"
-              className="text-white hover:text-blog-green transition-colors"
+              className="text-white hover:text-blog-green transition-colors !no-underline"
             >
               Gaming
             </Link>

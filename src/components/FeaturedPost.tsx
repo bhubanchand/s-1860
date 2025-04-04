@@ -47,7 +47,7 @@ const FeaturedPost: React.FC<FeaturedPostProps> = ({
         <span className="inline-block px-2 py-1 mb-2 text-xs font-semibold rounded bg-white text-black"> {/* Changed from blog-green to white and text to black for readability */}
           {category}
         </span>
-        <Link to={`/post/${slug}`}>
+        <Link to={`/post/${slug}`} className="!no-underline">
           <h2 className={`${titleSizes[size]} font-bold text-white text-shadow-lg mb-2 leading-tight hover:text-white/80 transition-colors`}> {/* Changed hover color */}
             {title}
           </h2>

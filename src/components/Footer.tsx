@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -11,10 +10,10 @@ const Footer: React.FC = () => {
             <h3 className="text-xl font-bold text-white mb-4">
               <Link
                 to="/"
-                className="flex items-center space-x-2 text-2xl font-bold text-white hover:scale-105 transition-transform duration-300"
+                className="flex items-center space-x-2 text-2xl font-bold text-white hover:scale-105 transition-transform duration-300 !no-underline"
               >
                 <img
-                  src="https://res.cloudinary.com/dyzamqtdw/image/upload/v1743444325/profile_bhuban_tonight_nbupw7.svg"
+                  src="https://res.cloudinary.com/dyzamqtdw/image/upload/v1743554489/logo_llf3w4.svg"
                   alt="Tonight Logo"
                   className="w-8 h-8"
                 />
@@ -22,7 +21,7 @@ const Footer: React.FC = () => {
               </Link>
             </h3>
             <p className="text-muted-foreground">
-              Your source for the latest entertainment and tech news.
+              Tonight isn't just a blog. It's a time machine. Fast, fresh, and packed with the future of trends, tech, and lifestyle.
             </p>
           </div>
 
@@ -32,7 +31,7 @@ const Footer: React.FC = () => {
               <li>
                 <Link
                   to="/category/Entertainment"
-                  className="text-muted-foreground hover:text-white transition-colors duration-300"
+                  className="text-muted-foreground hover:text-white transition-colors duration-300 !no-underline"
                 >
                   Entertainment
                 </Link>
@@ -40,7 +39,7 @@ const Footer: React.FC = () => {
               <li>
                 <Link
                   to="/category/Technology"
-                  className="text-muted-foreground hover:text-white transition-colors duration-300"
+                  className="text-muted-foreground hover:text-white transition-colors duration-300 !no-underline"
                 >
                   Technology
                 </Link>
@@ -48,7 +47,7 @@ const Footer: React.FC = () => {
               <li>
                 <Link
                   to="/category/Lifestyle"
-                  className="text-muted-foreground hover:text-white transition-colors duration-300"
+                  className="text-muted-foreground hover:text-white transition-colors duration-300 !no-underline"
                 >
                   Lifestyle
                 </Link>
@@ -56,7 +55,7 @@ const Footer: React.FC = () => {
               <li>
                 <Link
                   to="/category/Gaming"
-                  className="text-muted-foreground hover:text-white transition-colors duration-300"
+                  className="text-muted-foreground hover:text-white transition-colors duration-300 !no-underline"
                 >
                   Gaming
                 </Link>
@@ -70,7 +69,7 @@ const Footer: React.FC = () => {
               <li>
                 <Link
                   to="/team"
-                  className="text-muted-foreground hover:text-white transition-colors duration-300"
+                  className="text-muted-foreground hover:text-white transition-colors duration-300 !no-underline"
                 >
                   Our Team
                 </Link>
@@ -78,15 +77,15 @@ const Footer: React.FC = () => {
               <li>
                 <Link
                   to="/contact"
-                  className="text-muted-foreground hover:text-white transition-colors duration-300"
+                  className="text-muted-foreground hover:text-white transition-colors duration-300 !no-underline"
                 >
                   Contact Us
                 </Link>
               </li>
               <li>
                 <Link
-                  to="/privacy-policy"
-                  className="text-muted-foreground hover:text-white transition-colors duration-300"
+                  to="/privacy-policy" 
+                  className="text-muted-foreground hover:text-white transition-colors duration-300 !no-underline"
                 >
                   Privacy Policy
                 </Link>
@@ -94,7 +93,7 @@ const Footer: React.FC = () => {
               <li>
                 <Link
                   to="/terms-of-service"
-                  className="text-muted-foreground hover:text-white transition-colors duration-300"
+                  className="text-muted-foreground hover:text-white transition-colors duration-300 !no-underline"
                 >
                   Terms of Service
                 </Link>

@@ -12,7 +12,7 @@ interface BlogPostCardProps {
 const BlogPostCard = ({ post, featured = false }: BlogPostCardProps) => {
   return (
     <article className={`overflow-hidden rounded-lg border bg-white transition-shadow hover:shadow-md ${featured ? 'col-span-2' : ''}`}>
-      <Link to={`/blog/${post.slug}`} className="block">
+      <Link to={`/blog/${post.slug}`} className="block !no-underline">
         <img
           src={post.coverImage}
           alt={post.title}
@@ -28,7 +28,7 @@ const BlogPostCard = ({ post, featured = false }: BlogPostCardProps) => {
           ))}
         </div>
 
-        <Link to={`/blog/${post.slug}`}>
+        <Link to={`/blog/${post.slug}`} className="!no-underline">
           <h3 className="text-xl font-semibold text-gray-900 sm:text-2xl">
             {post.title}
           </h3>

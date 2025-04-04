@@ -45,7 +45,7 @@ const BlogCard: React.FC<BlogCardProps> = ({
           </span>
           <span className="text-sm text-gray-400">{date}</span>
         </div>
-        <Link to={`/post/${slug}`}>
+        <Link to={`/post/${slug}`} className="!no-underline">
           <h3 className="text-xl font-bold mb-2 group-hover:text-white transition-colors">
             {title}
           </h3>
