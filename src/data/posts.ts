@@ -1,6 +1,8 @@
 
 import { create } from "zustand";
-import { fetchAllPosts } from "@/lib/pocketbase";
+import axios from "axios";
+
+const API_URL = "https://script.google.com/macros/s/AKfycbzf0VinqJxKhdytV0NwUtneq1l--weG_cTUkoR9tUMwgQ6uUdjH3b_Kj27qCBxLulgZWg/exec";
 
 export type BlogPost = {
   id: number;
@@ -126,11 +128,28 @@ export const useBlogStore = create<BlogStore>()((set, get) => ({
       
       set({ loading: true, error: null });
       
-      // Use PocketBase instead of Google Sheets
-      const posts = await fetchAllPosts();
+      const response = await axios.get(API_URL, {
+        params: { _t: new Date().getTime() }, // Cache busting
+        timeout: 10000
+      });
+      
+      if (!response.data || !Array.isArray(response.data)) {
+        throw new Error("Invalid API response format");
+      }
+      
+      const posts = response.data as BlogPost[];
+      
+      // Normalize data to ensure consistent types
+      const normalizedPosts = posts.map(post => ({
+        ...post,
+        id: Number(post.id),
+        featured: Boolean(post.featured),
+        content: String(post.content || ''),
+        authorName: post.authorName || ''
+      }));
       
       set({ 
-        blogPosts: posts, 
+        blogPosts: normalizedPosts, 
         loading: false,
         error: null
       });
@@ -138,7 +157,7 @@ export const useBlogStore = create<BlogStore>()((set, get) => ({
       // Store in localStorage as backup
       try {
         localStorage.setItem('blog-posts-cache', JSON.stringify({
-          posts,
+          posts: normalizedPosts,
           timestamp: Date.now()
         }));
       } catch (e) {
