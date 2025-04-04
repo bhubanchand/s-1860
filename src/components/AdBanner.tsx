@@ -8,10 +8,8 @@ interface AdBannerProps {
   className?: string;
 }
 
-declare global {
-  interface Window {
-    adsbygoogle: any[];
-  }
+interface Window {
+  adsbygoogle: any[];
 }
 
 const AdBanner: React.FC<AdBannerProps> = ({

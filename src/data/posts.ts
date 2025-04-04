@@ -1,3 +1,4 @@
+
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import axios from "axios";
@@ -27,6 +28,7 @@ type BlogStore = {
   error: string | null;
   fetchPosts: (options?: { forceFresh?: boolean }) => Promise<void>;
   getPublishedPosts: () => BlogPost[];
+  startAutoFetch: () => () => void;
 };
 
 // Determine if a post should be displayed based on its scheduled time
@@ -197,6 +199,18 @@ export const useBlogStore = create<BlogStore>()((set, get) => ({
       
       throw err;
     }
+  },
+
+  startAutoFetch: () => {
+    console.log("Starting auto-fetch interval for blog posts");
+    const interval = setInterval(() => {
+      get().fetchPosts({ forceFresh: true });
+    }, 60000); // Fetch every minute
+    
+    return () => {
+      console.log("Stopping auto-fetch interval for blog posts");
+      clearInterval(interval);
+    };
   },
 
   getPublishedPosts: () => {
