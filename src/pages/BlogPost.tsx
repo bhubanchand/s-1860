@@ -5,9 +5,9 @@ import BlogLayout from "@/components/BlogLayout";
 import BlogCard from "@/components/BlogCard";
 import ScrollToTop from "@/components/ScrollToTop";
 import ReadTimeTracker from "@/components/ReadTimeTracker";
-import LoadingScreen from "@/components/LoadingScreen";
 import { getPostBySlug, getRelatedPosts } from "@/data/blogData";
 import { toast } from "sonner";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -52,7 +52,20 @@ const BlogPost = () => {
 
   // Render loading state
   if (loading) {
-    return <LoadingScreen />;
+    return (
+      <BlogLayout>
+        <div className="pt-20 container mx-auto px-4 max-w-4xl mt-8">
+          <Skeleton className="h-[400px] w-full mb-8" />
+          <Skeleton className="h-12 w-3/4 mb-4" />
+          <Skeleton className="h-6 w-1/2 mb-8" />
+          <div className="space-y-4">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-3/4" />
+          </div>
+        </div>
+      </BlogLayout>
+    );
   }
 
   // If post is still undefined after loading, render nothing (we'll navigate away)
@@ -75,7 +88,7 @@ const BlogPost = () => {
               fetchPriority="high"
             />
             <div className="absolute bottom-0 left-0 p-6 z-20">
-              <span className="inline-block px-3 py-1 text-sm font-semibold rounded bg-white text-black mb-4">
+              <span className="inline-block px-3 py-1 text-base font-semibold rounded bg-blog-green text-black mb-4">
                 {post.category}
               </span>
               <h1 className="text-3xl md:text-4xl font-bold text-white text-shadow-lg mb-2">
@@ -111,10 +124,10 @@ const BlogPost = () => {
             <div className="mt-8 pt-6 border-t border-muted">
               <div className="flex flex-wrap gap-2">
                 <span className="text-sm text-muted-foreground">Tags:</span>
-                <a href={`/category/${post.category}`} className="px-3 py-1 text-xs bg-white rounded-full text-black hover:bg-white/80 hover:text-black transition-colors">
+                <a href={`/category/${post.category}`} className="px-3 py-1 text-xs bg-muted rounded-full text-muted-foreground hover:bg-blog-green hover:bg-gray-500  transition-colors">
                   {post.category}
                 </a>
-                <a href="/trending" className="px-3 py-1 text-xs bg-muted rounded-full text-muted-foreground hover:bg-white hover:text-black transition-colors">
+                <a href="/trending" className="px-3 py-1 text-xs bg-muted rounded-full text-muted-foreground hover:bg-blog-green hover:text-white transition-colors hover:bg-gray-500 ">
                   Trending
                 </a>
               </div>
@@ -128,7 +141,7 @@ const BlogPost = () => {
                   href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-full bg-muted hover:bg-white transition-colors"
+                  className="p-2 rounded-full bg-muted hover:bg-blog-green transition-colors hover:bg-gray-500 "
                   aria-label="Share on Facebook"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -139,7 +152,7 @@ const BlogPost = () => {
                   href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(post.title)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-full bg-muted hover:bg-white transition-colors"
+                  className="p-2 rounded-full bg-muted hover:bg-blog-green transition-colors hover:bg-gray-500 "
                   aria-label="Share on Twitter"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -150,7 +163,7 @@ const BlogPost = () => {
                   href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(window.location.href)}&title=${encodeURIComponent(post.title)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-full bg-muted hover:bg-white transition-colors"
+                  className="p-2 rounded-full bg-muted hover:bg-blog-green transition-colors hover:bg-gray-500 "
                   aria-label="Share on LinkedIn"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -162,11 +175,11 @@ const BlogPost = () => {
                     navigator.clipboard.writeText(window.location.href);
                     toast.success("Link copied to clipboard!");
                   }}
-                  className="p-2 rounded-full bg-muted hover:bg-white transition-colors"
+                  className="p-2 rounded-full bg-muted hover:bg-blog-green transition-colors hover:bg-gray-500 "
                   aria-label="Copy link"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/>
+                    <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3  0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/>
                     <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/>
                   </svg>
                 </button>

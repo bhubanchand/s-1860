@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://tonight.blog/</loc>
+    <lastmod>2023-07-10</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dyzamqtdw/image/upload/v1743554489/logo_llf3w4.svg</image:loc>
+      <image:title>Tonight Blog</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tonight.blog/trending</loc>
+    <lastmod>2023-07-10</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dyzamqtdw/image/upload/v1743554489/logo_llf3w4.svg</image:loc>
+      <image:title>Trending on Tonight Blog</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tonight.blog/movies</loc>
+    <lastmod>2023-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dyzamqtdw/image/upload/v1743554489/logo_llf3w4.svg</image:loc>
+      <image:title>Movies on Tonight Blog</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tonight.blog/category/technology</loc>
+    <lastmod>2023-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dyzamqtdw/image/upload/v1743554489/logo_llf3w4.svg</image:loc>
+      <image:title>Technology on Tonight Blog</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tonight.blog/category/lifestyle</loc>
+    <lastmod>2023-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dyzamqtdw/image/upload/v1743554489/logo_llf3w4.svg</image:loc>
+      <image:title>Lifestyle on Tonight Blog</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tonight.blog/team</loc>
+    <lastmod>2023-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dyzamqtdw/image/upload/v1743554489/logo_llf3w4.svg</image:loc>
+      <image:title>Our Team at Tonight Blog</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tonight.blog/contact</loc>
+    <lastmod>2023-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dyzamqtdw/image/upload/v1743554489/logo_llf3w4.svg</image:loc>
+      <image:title>Contact Tonight Blog</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tonight.blog/privacy-policy</loc>
+    <lastmod>2023-06-15</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dyzamqtdw/image/upload/v1743554489/logo_llf3w4.svg</image:loc>
+      <image:title>Privacy Policy - Tonight Blog</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tonight.blog/terms-of-service</loc>
+    <lastmod>2023-06-15</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dyzamqtdw/image/upload/v1743554489/logo_llf3w4.svg</image:loc>
+      <image:title>Terms of Service - Tonight Blog</image:title>
+    </image:image>
+  </url>
+</urlset>

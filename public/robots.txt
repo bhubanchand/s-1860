@@ -6,6 +6,9 @@ Allow: /
 User-agent: Googlebot
 Allow: /
 
+User-agent: Googlebot-Image
+Allow: /
+
 User-agent: Bingbot
 Allow: /
 
@@ -15,15 +18,27 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
-# Image crawlers (for favicon/logo indexing)
-User-agent: Googlebot-Image
-Allow: /
-
-User-agent: DuckDuckBot
-Allow: /
+# Disallow certain patterns
+User-agent: *
+Disallow: /api/
+Disallow: */undefined
+Disallow: */undefined/*
+Disallow: /undefined
+Disallow: /undefined/*
 
 # Sitemap
 Sitemap: https://tonight.blog/sitemap.xml
 
 # Crawl delay for bots (in seconds)
 Crawl-delay: 1
+
+# Explicitly allow important pages
+User-agent: *
+Allow: /post/
+Allow: /category/
+Allow: /trending
+Allow: /movies
+Allow: /team
+Allow: /contact
+Allow: /privacy-policy
+Allow: /terms-of-service

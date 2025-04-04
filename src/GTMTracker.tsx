@@ -26,7 +26,9 @@ const GTMTracker = () => {
   // Initialize Google Tag Manager
   useEffect(() => {
     TagManager.initialize(tagManagerArgs);
-    console.log("GTM initialized with ID:", tagManagerArgs.gtmId);
+    
+    // Log GTM initialization
+    console.log("Google Tag Manager initialized with ID:", tagManagerArgs.gtmId);
   }, []);
 
   // Track page views with enhanced data
@@ -49,20 +51,42 @@ const GTMTracker = () => {
         : "UNKNOWN_PAGE";
     }
 
-    // Send enhanced data to GTM
+    // Create navigation timestamp
+    const navigationTimestamp = new Date().toISOString();
+
+    // Track page navigation with enhanced data
+    TagManager.dataLayer({
+      dataLayer: {
+        event: "page_navigation",
+        previousPage: sessionStorage.getItem('currentPage') || "",
+        currentPage: location.pathname,
+        pagePath: location.pathname,
+        pageTitle: document.title,
+        pageName: pageName,
+        pageDepth: pathSegments.length,
+        pageQuery: location.search,
+        timestamp: navigationTimestamp,
+        userTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        clientTime: new Date().toLocaleTimeString(),
+        refreshRequest: true,
+      },
+    });
+
+    // Store current page for next navigation event
+    sessionStorage.setItem('currentPage', location.pathname);
+
+    // Additional page_view event for standard analytics
     TagManager.dataLayer({
       dataLayer: {
         event: "page_view",
         pagePath: location.pathname,
         pageTitle: document.title,
         pageName: pageName,
-        pageDepth: pathSegments.length,
-        pageQuery: location.search,
-        timestamp: new Date().toISOString(),
+        timestamp: navigationTimestamp,
       },
     });
 
-    console.log(`Page tracked: ${pageName} (${location.pathname})`);
+    console.log(`Navigation tracked: ${location.pathname} (${pageName})`);
   }, [location]);
 
   return null;

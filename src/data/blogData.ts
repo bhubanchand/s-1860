@@ -2,7 +2,12 @@
 import { BlogPost, useBlogStore, shouldDisplayPost } from "./posts";
 
 // Get published posts with proper sorting
-export const getPublishedPosts = (): BlogPost[] => {
+export const getPublishedPosts = (forceFresh: boolean = false): BlogPost[] => {
+  if (forceFresh) {
+    // Force data refresh on demand
+    useBlogStore.getState().fetchPosts({ forceFresh: true });
+  }
+  
   // Access the store directly
   const blogPosts = useBlogStore.getState().getPublishedPosts();
   
@@ -24,14 +29,20 @@ export const sortByDate = (posts: BlogPost[]): BlogPost[] => {
     
     // If dates are identical, check time field
     if (a.time && b.time) {
-      const [hoursA, minutesA] = a.time.split('.').map(Number);
-      const [hoursB, minutesB] = b.time.split('.').map(Number);
-      
-      const timeA = hoursA * 60 + minutesA;
-      const timeB = hoursB * 60 + minutesB;
-      
-      if (timeA !== timeB) {
-        return timeB - timeA;
+      try {
+        const [hoursA, minutesA] = a.time.split('.').map(Number);
+        const [hoursB, minutesB] = b.time.split('.').map(Number);
+        
+        if (!isNaN(hoursA) && !isNaN(minutesA) && !isNaN(hoursB) && !isNaN(minutesB)) {
+          const timeA = hoursA * 60 + minutesA;
+          const timeB = hoursB * 60 + minutesB;
+          
+          if (timeA !== timeB) {
+            return timeB - timeA;
+          }
+        }
+      } catch (err) {
+        // Silent fail and continue with ID comparison
       }
     }
     
@@ -41,8 +52,8 @@ export const sortByDate = (posts: BlogPost[]): BlogPost[] => {
 };
 
 // Get featured posts
-export const getFeaturedPosts = (): BlogPost[] => {
-  const posts = getPublishedPosts();
+export const getFeaturedPosts = (forceFresh: boolean = false): BlogPost[] => {
+  const posts = getPublishedPosts(forceFresh);
   const featuredPosts = posts.filter(post => post.featured);
   
   if (featuredPosts.length === 0) {
@@ -65,8 +76,8 @@ export const getFeaturedPosts = (): BlogPost[] => {
 };
 
 // Get posts by category
-export const getPostsByCategory = (category: string, limit?: number, excludeIds: number[] = []): BlogPost[] => {
-  const allPosts = getPublishedPosts();
+export const getPostsByCategory = (category: string, limit?: number, excludeIds: number[] = [], forceFresh: boolean = false): BlogPost[] => {
+  const allPosts = getPublishedPosts(forceFresh);
   
   // Filter by category and exclude specified posts
   const filteredPosts = allPosts.filter(post => 
@@ -77,8 +88,8 @@ export const getPostsByCategory = (category: string, limit?: number, excludeIds:
 };
 
 // Get recent posts
-export const getRecentPosts = (limit: number = 6, excludeIds: number[] = []): BlogPost[] => {
-  const allPosts = getPublishedPosts();
+export const getRecentPosts = (limit: number = 6, excludeIds: number[] = [], forceFresh: boolean = false): BlogPost[] => {
+  const allPosts = getPublishedPosts(forceFresh);
   
   // Filter out excluded posts
   const filteredPosts = allPosts.filter(post => !excludeIds.includes(post.id));
@@ -88,8 +99,8 @@ export const getRecentPosts = (limit: number = 6, excludeIds: number[] = []): Bl
 };
 
 // Get related posts (same category as the current post)
-export const getRelatedPosts = (currentPostId: number, limit: number = 3): BlogPost[] => {
-  const allPosts = getPublishedPosts();
+export const getRelatedPosts = (currentPostId: number, limit: number = 3, forceFresh: boolean = false): BlogPost[] => {
+  const allPosts = getPublishedPosts(forceFresh);
   const currentPost = allPosts.find(post => post.id === currentPostId);
   
   if (!currentPost) return [];
@@ -104,14 +115,14 @@ export const getRelatedPosts = (currentPostId: number, limit: number = 3): BlogP
 };
 
 // Find post by slug
-export const getPostBySlug = (slug: string): BlogPost | undefined => {
+export const getPostBySlug = (slug: string, forceFresh: boolean = false): BlogPost | undefined => {
   if (!slug) return undefined;
   
-  const allPosts = getPublishedPosts();
+  const allPosts = getPublishedPosts(forceFresh);
   return allPosts.find(post => post.slug === slug);
 };
 
 // Get posts for selected categories without repetition
-export const getPostsWithoutRepetition = (category: string, limit: number = 4, excludeIds: number[] = []): BlogPost[] => {
-  return getPostsByCategory(category, limit, excludeIds);
+export const getPostsWithoutRepetition = (category: string, limit: number = 4, excludeIds: number[] = [], forceFresh: boolean = false): BlogPost[] => {
+  return getPostsByCategory(category, limit, excludeIds, forceFresh);
 };

@@ -40,8 +40,12 @@ export function shouldDisplayPost(post: BlogPost): boolean {
     const now = new Date();
     const postDate = new Date(post.createdAt);
     
+    // Create a new Date for start of today to avoid modifying 'now'
+    const todayStart = new Date(now);
+    todayStart.setHours(0, 0, 0, 0);
+    
     // Check if the post date is from a previous day
-    if (postDate.getTime() < now.setHours(0, 0, 0, 0)) {
+    if (postDate.getTime() < todayStart.getTime()) {
       return true;
     }
     
@@ -49,6 +53,11 @@ export function shouldDisplayPost(post: BlogPost): boolean {
     if (postDate.getDate() === now.getDate() && 
         postDate.getMonth() === now.getMonth() &&
         postDate.getFullYear() === now.getFullYear()) {
+      
+      // Handle case when time format is invalid
+      if (!post.time.includes('.')) {
+        return false;
+      }
       
       const [hoursStr, minutesStr] = post.time.split('.');
       const scheduledHours = parseInt(hoursStr, 10);
@@ -77,7 +86,6 @@ export function shouldDisplayPost(post: BlogPost): boolean {
     return false;
     
   } catch (err) {
-    console.error("Error checking post display status:", err);
     return false;
   }
 }
@@ -93,7 +101,6 @@ export const useBlogStore = create<BlogStore>()((set, get) => ({
         // Check if we already have posts loaded
         const currentPosts = get().blogPosts;
         if (currentPosts.length > 0) {
-          console.log("Store: Using already loaded posts");
           return;
         }
 
@@ -106,7 +113,6 @@ export const useBlogStore = create<BlogStore>()((set, get) => ({
             
             // Use cache if it's less than 1 hour old
             if (cacheAge < 60 * 60 * 1000 && Array.isArray(posts) && posts.length > 0) {
-              console.log("Store: Using cached posts from localStorage");
               set({ 
                 blogPosts: posts,
                 loading: false,
@@ -116,13 +122,12 @@ export const useBlogStore = create<BlogStore>()((set, get) => ({
             }
           }
         } catch (e) {
-          console.warn("Failed to load cached posts:", e);
+          // Continue with API fetch if cache fails
         }
       }
       
       set({ loading: true, error: null });
       
-      console.log("Store: Fetching posts from API");
       const response = await axios.get(API_URL, {
         params: { _t: new Date().getTime() }, // Cache busting
         timeout: 10000
@@ -133,7 +138,6 @@ export const useBlogStore = create<BlogStore>()((set, get) => ({
       }
       
       const posts = response.data as BlogPost[];
-      console.log(`Store: Fetched ${posts.length} posts successfully`);
       
       // Normalize data to ensure consistent types
       const normalizedPosts = posts.map(post => ({
@@ -156,24 +160,17 @@ export const useBlogStore = create<BlogStore>()((set, get) => ({
           posts: normalizedPosts,
           timestamp: Date.now()
         }));
-        console.log("Store: Posts cached in localStorage");
       } catch (e) {
-        console.warn("Failed to cache posts in localStorage:", e);
+        // Ignore storage errors
       }
       
     } catch (err) {
-      console.error("Store: Error fetching posts:", err);
-      
       // Try to load from localStorage cache as fallback
       try {
         const cachedData = localStorage.getItem('blog-posts-cache');
         if (cachedData) {
-          const { posts, timestamp } = JSON.parse(cachedData);
-          const cacheAge = Date.now() - timestamp;
-          
-          // Use cache if it's less than 1 hour old
-          if (cacheAge < 60 * 60 * 1000 && Array.isArray(posts) && posts.length > 0) {
-            console.log("Store: Using cached posts from localStorage");
+          const { posts } = JSON.parse(cachedData);
+          if (Array.isArray(posts) && posts.length > 0) {
             set({ 
               blogPosts: posts,
               loading: false,
@@ -183,7 +180,7 @@ export const useBlogStore = create<BlogStore>()((set, get) => ({
           }
         }
       } catch (e) {
-        console.warn("Failed to load cached posts:", e);
+        // Continue with error handling
       }
       
       set({ 
@@ -197,6 +194,8 @@ export const useBlogStore = create<BlogStore>()((set, get) => ({
 
   getPublishedPosts: () => {
     const allPosts = get().blogPosts;
-    return allPosts.filter(post => shouldDisplayPost(post));
+    const publishedPosts = allPosts.filter(post => shouldDisplayPost(post));
+    
+    return publishedPosts;
   },
 }));

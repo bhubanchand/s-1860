@@ -9,104 +9,109 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      authors: {
+      blog_posts: {
         Row: {
-          avatar: string | null
-          created_at: string | null
+          category: string
+          content: string
+          created_at: string
+          excerpt: string
+          featured: boolean | null
+          featured_size: string | null
           id: string
-          name: string
+          image: string
+          read_time: string
+          slug: string
+          title: string
+          updated_at: string
+          views: number
         }
         Insert: {
-          avatar?: string | null
-          created_at?: string | null
+          category: string
+          content: string
+          created_at?: string
+          excerpt: string
+          featured?: boolean | null
+          featured_size?: string | null
           id?: string
-          name: string
+          image: string
+          read_time: string
+          slug: string
+          title: string
+          updated_at?: string
+          views?: number
         }
         Update: {
-          avatar?: string | null
-          created_at?: string | null
+          category?: string
+          content?: string
+          created_at?: string
+          excerpt?: string
+          featured?: boolean | null
+          featured_size?: string | null
           id?: string
-          name?: string
+          image?: string
+          read_time?: string
+          slug?: string
+          title?: string
+          updated_at?: string
+          views?: number
         }
         Relationships: []
       }
       categories: {
         Row: {
-          created_at: string | null
+          description: string | null
           id: string
           name: string
           slug: string
         }
         Insert: {
-          created_at?: string | null
+          description?: string | null
           id?: string
           name: string
           slug: string
         }
         Update: {
-          created_at?: string | null
+          description?: string | null
           id?: string
           name?: string
           slug?: string
         }
         Relationships: []
       }
-      posts: {
+      comments: {
         Row: {
-          author_id: string | null
-          category_id: string | null
+          author_email: string
+          author_name: string
           content: string
-          cover_image: string | null
-          created_at: string | null
-          excerpt: string | null
-          featured: boolean | null
+          created_at: string
           id: string
-          published: boolean | null
-          published_at: string | null
-          slug: string
-          title: string
+          is_approved: boolean | null
+          post_id: string
         }
         Insert: {
-          author_id?: string | null
-          category_id?: string | null
+          author_email: string
+          author_name: string
           content: string
-          cover_image?: string | null
-          created_at?: string | null
-          excerpt?: string | null
-          featured?: boolean | null
+          created_at?: string
           id?: string
-          published?: boolean | null
-          published_at?: string | null
-          slug: string
-          title: string
+          is_approved?: boolean | null
+          post_id: string
         }
         Update: {
-          author_id?: string | null
-          category_id?: string | null
+          author_email?: string
+          author_name?: string
           content?: string
-          cover_image?: string | null
-          created_at?: string | null
-          excerpt?: string | null
-          featured?: boolean | null
+          created_at?: string
           id?: string
-          published?: boolean | null
-          published_at?: string | null
-          slug?: string
-          title?: string
+          is_approved?: boolean | null
+          post_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "posts_author_id_fkey"
-            columns: ["author_id"]
+            foreignKeyName: "comments_post_id_fkey"
+            columns: ["post_id"]
             isOneToOne: false
-            referencedRelation: "authors"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "posts_category_id_fkey"
-            columns: ["category_id"]
-            isOneToOne: false
-            referencedRelation: "categories"
+            referencedRelation: "blog_posts"
             referencedColumns: ["id"]
           },
         ]

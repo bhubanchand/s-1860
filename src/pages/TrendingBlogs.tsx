@@ -53,7 +53,7 @@ const TrendingBlogs = () => {
             <div className="flex justify-center mt-10">
               <button
                 onClick={handleLoadMore}
-                className="px-6 py-3 bg-blog-green hover:bg-green-600 text-white font-medium rounded-md transition-colors"
+                className="px-6 py-3 bg-blog-green text-black hover:bg-gray-200  font-medium rounded-md transition-colors"
               >
                 Load More
               </button>

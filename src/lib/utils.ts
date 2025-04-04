@@ -2,7 +2,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { format, parseISO } from "date-fns"
-import { formatInTimeZone } from "date-fns-tz"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -17,7 +16,6 @@ export function formatDisplayDate(dateString: string): string {
     const date = parseISO(dateString)
     return format(date, "MMM d, yyyy")
   } catch (error) {
-    console.error("Error formatting date:", error)
     return dateString
   }
 }
@@ -28,7 +26,6 @@ export function formatDisplayDateTime(dateString: string): string {
     const date = parseISO(dateString)
     return format(date, "MMM d, yyyy h:mm a")
   } catch (error) {
-    console.error("Error formatting date and time:", error)
     return dateString
   }
 }
@@ -62,20 +59,40 @@ export function formatRelativeTime(dateString: string): string {
     if (absDiff < 86400) return `${Math.floor(absDiff / 3600)} hours ago`
     return `${Math.floor(absDiff / 86400)} days ago`
   } catch (error) {
-    console.error("Error formatting relative time:", error)
     return dateString
   }
 }
 
 // Get current date and time in IST
 export function getCurrentISTDateTime(): Date {
-  const now = new Date()
-  // Use the date-fns-tz to format the date in IST, then create a new Date from it
-  const istDateTimeString = formatInTimeZone(now, TIMEZONE_IST, "yyyy-MM-dd'T'HH:mm:ss")
-  return new Date(istDateTimeString)
+  return new Date();
 }
 
-// Check if post should be published based on time field (moved to posts.ts - kept for backwards compatibility)
-export function isPostPublished(): boolean {
-  return true; // This is just a stub - actual implementation is in posts.ts
+// Force data refresh when navigating between pages
+export function forceDataRefresh() {
+  // Clear localStorage cache to force fresh data fetch
+  try {
+    localStorage.removeItem('blog-posts-cache');
+    console.log("Blog posts cache cleared for fresh data fetch");
+    return true;
+  } catch (e) {
+    console.error("Failed to clear cache:", e);
+    return false;
+  }
+}
+
+// Check if data needs refresh (older than specified minutes)
+export function needsDataRefresh(minutes: number = 5): boolean {
+  try {
+    const cachedData = localStorage.getItem('blog-posts-cache');
+    if (!cachedData) return true;
+    
+    const { timestamp } = JSON.parse(cachedData);
+    const cacheAge = Date.now() - timestamp;
+    
+    // Convert minutes to milliseconds for comparison
+    return cacheAge > minutes * 60 * 1000;
+  } catch (e) {
+    return true;
+  }
 }

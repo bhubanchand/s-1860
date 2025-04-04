@@ -157,8 +157,8 @@ const ContactUs = () => {
                     <Mail className="text-blog-green mt-1 mr-4" />
                     <div>
                       <h3 className="font-medium mb-1">Email Us</h3>
-                      <p className="text-muted-foreground">info@blogpulse.com</p>
-                      <p className="text-muted-foreground">editorial@blogpulse.com</p>
+                      <p className="text-muted-foreground">enquiry@tonight.blog</p>
+                      <p className="text-muted-foreground">support@tonight.blog</p>
                     </div>
                   </div>
 
