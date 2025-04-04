@@ -1,6 +1,9 @@
 
 import { BlogPost, useBlogStore, shouldDisplayPost } from "./posts";
 
+// Export the BlogPost type
+export type { BlogPost };
+
 // Get published posts with proper sorting
 export const getPublishedPosts = (forceFresh: boolean = false): BlogPost[] => {
   if (forceFresh) {
