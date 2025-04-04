@@ -8,15 +8,20 @@ export const getPublishedPosts = (forceFresh: boolean = false): BlogPost[] => {
     useBlogStore.getState().fetchPosts({ forceFresh: true });
   }
   
-  // Access the store directly
+  // Access the store directly but securely
   const blogPosts = useBlogStore.getState().getPublishedPosts();
   
   // Sort posts by date (newest first)
-  return sortByDate(blogPosts);
+  return sortBlogPosts(blogPosts);
+};
+
+// Function to get all posts, including scheduled ones (used internally)
+export const getAllPostsIncludingScheduled = (): BlogPost[] => {
+  return useBlogStore.getState().blogPosts;
 };
 
 // Improved sorting for posts by date, time, and ID
-export const sortByDate = (posts: BlogPost[]): BlogPost[] => {
+export const sortBlogPosts = (posts: BlogPost[]): BlogPost[] => {
   return [...posts].sort((a, b) => {
     // Convert dates to timestamps for comparison
     const dateA = new Date(a.createdAt).getTime();
